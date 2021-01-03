@@ -40,7 +40,7 @@ To view the results, append `?analytics=on` to your app's URL
 your app (see image above).
 
 
-## More details
+## More
 
 - You can **password-protect** your analytics results with 
 `streamlit_analytics.track(unsafe_password=...)`. The streamlit app will then ask you 
