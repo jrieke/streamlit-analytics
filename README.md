@@ -8,7 +8,7 @@ streamlit app and visualizes the results directly in your browser. Think Google
 Analytics but for streamlit.
 
 <p align="center">
-    <img src="images/example.png" width=500>
+    <img src="images/example.png" width=600>
 </p>
 
 
