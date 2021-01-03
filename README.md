@@ -7,6 +7,10 @@ framework. With just one line of code, it tracks and counts all user inputs to y
 streamlit app and visualizes the results directly in your browser. Think Google 
 Analytics but for streamlit.
 
+<p align="center">
+    <img src="images/example.png" width=500>
+</p>
+
 
 ## Installation
 
@@ -28,12 +32,8 @@ can also use any other streamlit component in the `with` block (currently suppor
 button, text_input, selectbox). 
 
 To view the results, append `?analytics=on` to your app's URL 
-(e.g. http://localhost:8501/?analytics=on). The results are shown directly below your 
-app:
-
-<p align="center">
-    <img src="images/example.png" width=500>
-</p>
+(e.g. http://localhost:8501/?analytics=on). The results are then shown directly below 
+your app (see image above).
 
 If you don't want a huge `with` block, you can also manually call 
 `streamlit_analytics.start_tracking()` at the beginning of your app and
