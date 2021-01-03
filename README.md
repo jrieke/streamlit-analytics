@@ -35,6 +35,12 @@ To view the results, append `?analytics=on` to your app's URL
 (e.g. http://localhost:8501/?analytics=on). The results are then shown directly below 
 your app (see image above).
 
-If you don't want a huge `with` block, you can also manually call 
+
+## More
+
+- If you don't want a huge `with` block, you can also manually call 
 `streamlit_analytics.start_tracking()` at the beginning of your app and
-`streamlit_analytics.stop_tracking()` at the end.
+`streamlit_analytics.stop_tracking()` at the end
+- *Experimental:* You can store analytics results to a json file by passing 
+`save_to_json="path/to/file.json"` to `streamlit_analytics.track` or 
+`streamlit_analytics.stop_tracking`
