@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from setuptools import setup
+from setuptools import setup, find_packages
 
 here = Path(__file__).resolve().parent
 
@@ -23,6 +23,8 @@ setup(
     url="https://github.com/jrieke/streamlit-analytics",
     license="MIT",
     python_requires=">=3.6",
+    packages=find_packages(exclude=("tests", "docs", "examples")),
+    include_package_data=True,
     install_requires=["streamlit"],
     classifiers=[
         "Programming Language :: Python :: 3",
