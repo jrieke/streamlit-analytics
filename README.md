@@ -42,9 +42,21 @@ your app (see image above).
 
 ## More
 
-- If you don't want a huge `with` block, you can also manually call 
-`streamlit_analytics.start_tracking()` at the beginning of your app and
-`streamlit_analytics.stop_tracking()` at the end
-- *Experimental:* You can store analytics results to a json file by passing 
+- You can **password-protect** your analytics results with 
+`streamlit_analytics.track(unsafe_password=...)`. The streamlit app will then ask you 
+for this password. Do not choose an important password here – it is sent without 
+encryption.
+- If you don't want a **huge `with` block**, you can also do:
+
+    ```python
+    import streamlit_analytics
+
+    streamlit_analytics.start_tracking()
+    # your streamlit code here
+    streamlit_analytics.stop_tracking()
+    ```
+
+- *Experimental:* You can **store analytics results as a json file** by passing 
 `save_to_json="path/to/file.json"` to `streamlit_analytics.track` or 
-`streamlit_analytics.stop_tracking`
+`streamlit_analytics.stop_tracking`. At the moment, this may lead to problems with 
+concurrency.
