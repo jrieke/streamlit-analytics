@@ -7,7 +7,6 @@ here = Path(__file__).resolve().parent
 # Read version from streamlit_analytics/__init__.py
 version_re = r"^__version__ = ['\"]([^'\"]*)['\"]"
 init_text = (here / "streamlit_analytics" / "__init__.py").read_text()
-
 version = re.findall(version_re, init_text)[0]
 
 # Read README.md.
