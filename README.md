@@ -59,4 +59,4 @@ encryption.
 - *Experimental:* You can **store analytics results as a json file** by passing 
 `save_to_json="path/to/file.json"` to `streamlit_analytics.track` or 
 `streamlit_analytics.stop_tracking`. At the moment, this may lead to problems with 
-concurrency.
+concurrency if many users access the site at the same time. 
