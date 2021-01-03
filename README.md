@@ -14,7 +14,11 @@ Analytics but for streamlit.
 
 ## Installation
 
-Coming soon!
+```bash
+pip install git+https://github.com/jrieke/streamlit-analytics.git
+```
+
+Requires Python 3.6+
 
 
 ## How to use it
