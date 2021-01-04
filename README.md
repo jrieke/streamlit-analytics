@@ -15,7 +15,7 @@ Google Analytics but for streamlit.
 ## Installation
 
 ```bash
-pip install git+https://github.com/jrieke/streamlit-analytics.git
+pip install streamlit-analytics
 ```
 
 Requires Python 3.6+
