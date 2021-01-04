@@ -16,6 +16,7 @@ counts = {"pageviews": 0, "script_runs": 0, "widgets": {}}
 # in `start_tracking` (see wrapper functions below).
 _orig_button = st.button
 _orig_checkbox = st.checkbox
+_orig_radio = st.radio
 _orig_selectbox = st.selectbox
 _orig_text_input = st.text_input
 
@@ -48,6 +49,17 @@ def _checkbox_wrapper(label, *args, **kwargs):
     if checked:
         counts["widgets"][label] += 1
     return checked
+
+
+def _radio_wrapper(label, options, *args, **kwargs):
+    selected = _orig_radio(label, options, *args, **kwargs)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    for option in options:
+        if option not in counts["widgets"][label]:
+            counts["widgets"][label][option] = 0
+    counts["widgets"][label][selected] += 1
+    return selected
 
 
 def _selectbox_wrapper(label, options, *args, **kwargs):
@@ -87,6 +99,7 @@ def start_tracking(verbose: bool = False):
     # Monkey-patch streamlit to call the wrappers above.
     st.button = _button_wrapper
     st.checkbox = _checkbox_wrapper
+    st.radio = _radio_wrapper
     st.selectbox = _selectbox_wrapper
     st.text_input = _text_input_wrapper
 
@@ -114,6 +127,7 @@ def stop_tracking(
     # Reset streamlit functions.
     st.button = _orig_button
     st.checkbox = _orig_checkbox
+    st.radio = _orig_radio
     st.selectbox = _orig_selectbox
     st.text_input = _orig_text_input
 
