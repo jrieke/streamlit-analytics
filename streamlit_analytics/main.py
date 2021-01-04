@@ -11,7 +11,12 @@ from . import session_state
 
 # Dict that holds all analytics results. Note that this is persistent across users,
 # as modules are only imported once by a streamlit app.
-counts = {"pageviews": 0, "script_runs": 0, "widgets": {}}
+counts = {
+    "total_pageviews": 0,
+    "total_script_runs": 0,
+    "days": [{"date": str(datetime.date.today()), "pageviews": 0, "script_runs": 0}],
+    "widgets": {},
+}
 
 # Store original streamlit functions. They will be monkey-patched with some wrappers
 # in `start_tracking` (see wrapper functions below).
@@ -48,10 +53,16 @@ _orig_sidebar_color_picker = st.sidebar.color_picker
 
 def _track_user(sess):
     """Track individual pageviews by storing user id to session state."""
-    counts["script_runs"] += 1
+    today = str(datetime.datetime.now().replace(microsecond=0, second=0))
+    if counts["days"][-1]["date"] != today:
+        # TODO: Insert 0 for all days between today and last entry.
+        counts["days"].append({"date": today, "pageviews": 0, "script_runs": 0})
+    counts["total_script_runs"] += 1
+    counts["days"][-1]["script_runs"] += 1
     if not sess.user_tracked:
         sess.user_tracked = True
-        counts["pageviews"] += 1
+        counts["total_pageviews"] += 1
+        counts["days"][-1]["pageviews"] += 1
         # print("Tracked new user")
 
 
