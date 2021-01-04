@@ -46,23 +46,23 @@ _orig_sidebar_file_uploader = st.sidebar.file_uploader
 _orig_sidebar_color_picker = st.sidebar.color_picker
 
 
-def _track_user():
+def _track_user(sess):
     """Track individual pageviews by storing user id to session state."""
     counts["script_runs"] += 1
-    sess = session_state.get(user_tracked=False)
     if not sess.user_tracked:
         sess.user_tracked = True
         counts["pageviews"] += 1
         # print("Tracked new user")
 
 
-def _wrap_bool(func):
+def _wrap_bool(func, state_dict):
     """
     Wrap a streamlit function that returns a bool, e.g. st.button, st.checkbox.
     """
 
     def new_func(label, *args, **kwargs):
         checked = func(label, *args, **kwargs)
+        state_dict[label] = checked
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
         if checked:
@@ -72,13 +72,14 @@ def _wrap_bool(func):
     return new_func
 
 
-def _wrap_file_uploader(func):
+def _wrap_file_uploader(func, state_dict):
     """
     Wrap st.file_uploader.
     """
 
     def new_func(label, *args, **kwargs):
         uploaded_file = func(label, *args, **kwargs)
+        state_dict[label] = uploaded_file is not None
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
         if uploaded_file is not None:
@@ -88,14 +89,15 @@ def _wrap_file_uploader(func):
     return new_func
 
 
-def _wrap_select(func):
+def _wrap_select(func, state_dict):
     """
-    Wrap a streamlit function the returns one selected element out of multiple options,
+    Wrap a streamlit function that returns one selected element out of multiple options,
     e.g. st.radio, st.selectbox, st.select_slider.
     """
 
     def new_func(label, options, *args, **kwargs):
         selected = func(label, options, *args, **kwargs)
+        state_dict[label] = selected
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
         for option in options:
@@ -107,14 +109,15 @@ def _wrap_select(func):
     return new_func
 
 
-def _wrap_multiselect(func):
+def _wrap_multiselect(func, state_dict):
     """
-    Wrap a streamlit function the returns multiple selected elements out of multiple 
+    Wrap a streamlit function that returns multiple selected elements out of multiple 
     options, e.g. st.multiselect.
     """
 
     def new_func(label, options, *args, **kwargs):
         selected = func(label, options, *args, **kwargs)
+        state_dict[label] = selected
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
         for option in options:
@@ -127,7 +130,7 @@ def _wrap_multiselect(func):
     return new_func
 
 
-def _wrap_value(func):
+def _wrap_value(func, state_dict):
     """
     Wrap a streamlit function that returns a single value (str/int/float/datetime/...),
     e.g. st.slider, st.text_input, st.number_input, st.text_area, st.date_input, 
@@ -136,6 +139,7 @@ def _wrap_value(func):
 
     def new_func(label, *args, **kwargs):
         value = func(label, *args, **kwargs)
+        state_dict[label] = value
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
 
@@ -166,38 +170,45 @@ def start_tracking(verbose: bool = False):
     `with streamlit_analytics.track():`. 
     """
 
-    _track_user()
+    sess = session_state.get(user_tracked=False, state_dict={})
+    _track_user(sess)
 
     # Monkey-patch streamlit to call the wrappers above.
-    st.button = _wrap_bool(_orig_button)
-    st.checkbox = _wrap_bool(_orig_checkbox)
-    st.radio = _wrap_select(_orig_radio)
-    st.selectbox = _wrap_select(_orig_selectbox)
-    st.multiselect = _wrap_multiselect(_orig_multiselect)
-    st.slider = _wrap_value(_orig_slider)
-    st.select_slider = _wrap_select(_orig_select_slider)
-    st.text_input = _wrap_value(_orig_text_input)
-    st.number_input = _wrap_value(_orig_number_input)
-    st.text_area = _wrap_value(_orig_text_area)
-    st.date_input = _wrap_value(_orig_date_input)
-    st.time_input = _wrap_value(_orig_time_input)
-    st.file_uploader = _wrap_file_uploader(_orig_file_uploader)
-    st.color_picker = _wrap_value(_orig_color_picker)
-    
-    st.sidebar.button = _wrap_bool(_orig_sidebar_button)
-    st.sidebar.checkbox = _wrap_bool(_orig_sidebar_checkbox)
-    st.sidebar.radio = _wrap_select(_orig_sidebar_radio)
-    st.sidebar.selectbox = _wrap_select(_orig_sidebar_selectbox)
-    st.sidebar.multiselect = _wrap_multiselect(_orig_sidebar_multiselect)
-    st.sidebar.slider = _wrap_value(_orig_sidebar_slider)
-    st.sidebar.select_slider = _wrap_select(_orig_sidebar_select_slider)
-    st.sidebar.text_input = _wrap_value(_orig_sidebar_text_input)
-    st.sidebar.number_input = _wrap_value(_orig_sidebar_number_input)
-    st.sidebar.text_area = _wrap_value(_orig_sidebar_text_area)
-    st.sidebar.date_input = _wrap_value(_orig_sidebar_date_input)
-    st.sidebar.time_input = _wrap_value(_orig_sidebar_time_input)
-    st.sidebar.file_uploader = _wrap_file_uploader(_orig_sidebar_file_uploader)
-    st.sidebar.color_picker = _wrap_value(_orig_sidebar_color_picker)
+    st.button = _wrap_bool(_orig_button, sess.state_dict)
+    st.checkbox = _wrap_bool(_orig_checkbox, sess.state_dict)
+    st.radio = _wrap_select(_orig_radio, sess.state_dict)
+    st.selectbox = _wrap_select(_orig_selectbox, sess.state_dict)
+    st.multiselect = _wrap_multiselect(_orig_multiselect, sess.state_dict)
+    st.slider = _wrap_value(_orig_slider, sess.state_dict)
+    st.select_slider = _wrap_select(_orig_select_slider, sess.state_dict)
+    st.text_input = _wrap_value(_orig_text_input, sess.state_dict)
+    st.number_input = _wrap_value(_orig_number_input, sess.state_dict)
+    st.text_area = _wrap_value(_orig_text_area, sess.state_dict)
+    st.date_input = _wrap_value(_orig_date_input, sess.state_dict)
+    st.time_input = _wrap_value(_orig_time_input, sess.state_dict)
+    st.file_uploader = _wrap_file_uploader(_orig_file_uploader, sess.state_dict)
+    st.color_picker = _wrap_value(_orig_color_picker, sess.state_dict)
+
+    st.sidebar.button = _wrap_bool(_orig_sidebar_button, sess.state_dict)
+    st.sidebar.checkbox = _wrap_bool(_orig_sidebar_checkbox, sess.state_dict)
+    st.sidebar.radio = _wrap_select(_orig_sidebar_radio, sess.state_dict)
+    st.sidebar.selectbox = _wrap_select(_orig_sidebar_selectbox, sess.state_dict)
+    st.sidebar.multiselect = _wrap_multiselect(
+        _orig_sidebar_multiselect, sess.state_dict
+    )
+    st.sidebar.slider = _wrap_value(_orig_sidebar_slider, sess.state_dict)
+    st.sidebar.select_slider = _wrap_select(
+        _orig_sidebar_select_slider, sess.state_dict
+    )
+    st.sidebar.text_input = _wrap_value(_orig_sidebar_text_input, sess.state_dict)
+    st.sidebar.number_input = _wrap_value(_orig_sidebar_number_input, sess.state_dict)
+    st.sidebar.text_area = _wrap_value(_orig_sidebar_text_area, sess.state_dict)
+    st.sidebar.date_input = _wrap_value(_orig_sidebar_date_input, sess.state_dict)
+    st.sidebar.time_input = _wrap_value(_orig_sidebar_time_input, sess.state_dict)
+    st.sidebar.file_uploader = _wrap_file_uploader(
+        _orig_sidebar_file_uploader, sess.state_dict
+    )
+    st.sidebar.color_picker = _wrap_value(_orig_sidebar_color_picker, sess.state_dict)
 
     # replacements = {
     #     "button": _wrap_bool,
@@ -236,6 +247,9 @@ def stop_tracking(
         print("Finished script execution. New counts:")
         print(counts)
         print("-" * 80)
+        
+    sess = session_state.get()
+    print(sess.state_dict)
 
     # Reset streamlit functions.
     st.button = _orig_button
@@ -252,7 +266,7 @@ def stop_tracking(
     st.time_input = _orig_time_input
     st.file_uploader = _orig_file_uploader
     st.color_picker = _orig_color_picker
-    
+
     st.sidebar.button = _orig_sidebar_button
     st.sidebar.checkbox = _orig_sidebar_checkbox
     st.sidebar.radio = _orig_sidebar_radio
