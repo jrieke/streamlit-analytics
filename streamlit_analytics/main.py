@@ -130,6 +130,8 @@ def stop_tracking(
             password_input = st.text_input("Enter password to show results")
             if password_input != unsafe_password:
                 show_results = False
+                if len(password_input) > 0:
+                    st.write("Nope, that's not correct ☝️")
         if show_results:
             st.markdown(
                 """
