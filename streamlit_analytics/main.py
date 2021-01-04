@@ -359,18 +359,20 @@ def stop_tracking(
 
             # Plot chart with pageviews.
             df = pd.DataFrame(counts["per_day"])
-            base = alt.Chart(df).encode(x="days:T")
+            base = alt.Chart(df).encode(
+                x=alt.X("monthdate(days):O", axis=alt.Axis(title="", grid=True))
+            )
             line1 = base.mark_line(point=True, stroke="#5276A7").encode(
                 alt.Y(
                     "pageviews:Q",
-                    axis=alt.Axis(title="pageviews", titleColor="#5276A7"),
+                    axis=alt.Axis(titleColor="#5276A7", format=".0f", tickMinStep=1),
                     scale=alt.Scale(domain=(0, df["pageviews"].max() + 1)),
                 )
             )
             line2 = base.mark_line(point=True, stroke="#57A44C").encode(
                 alt.Y(
                     "script_runs:Q",
-                    axis=alt.Axis(title="script_runs", titleColor="#57A44C"),
+                    axis=alt.Axis(titleColor="#57A44C", format=".0f", tickMinStep=1),
                 )
             )
             layer = alt.layer(line1, line2).resolve_scale(y="independent")
