@@ -16,3 +16,4 @@ with streamlit_analytics.track():
     st.text_area("text_area")
     st.date_input("date_input")
     st.time_input("time_input")
+    st.file_uploader("file_uploader")

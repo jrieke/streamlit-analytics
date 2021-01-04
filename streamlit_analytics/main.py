@@ -163,15 +163,15 @@ def _time_input_wrapper(label, *args, **kwargs):
     if time not in counts["widgets"][label]:
         counts["widgets"][label][time] = 0
     counts["widgets"][label][time] += 1
-    
-    
+
+
 def _file_uploader_wrapper(label, *args, **kwargs):
     uploaded_file = _orig_file_uploader(label, *args, **kwargs)
     if label not in counts["widgets"]:
         counts["widgets"][label] = 0
     if uploaded_file is not None:
         counts["widgets"][label] += 1
-    return clicked
+    return uploaded_file
 
 
 def start_tracking(verbose: bool = False):
