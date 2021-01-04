@@ -99,7 +99,7 @@ def _wrap_file_uploader(func, state_dict):
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
         # TODO: Right now this doesn't track when multiple files are uploaded one after
-        #   another. Maybe compare files directly (but probably not very clever to 
+        #   another. Maybe compare files directly (but probably not very clever to
         #   store in session state) or hash them somehow and check if a different file
         #   was uploaded.
         if uploaded_file and not state_dict.get(label, None):
@@ -336,10 +336,10 @@ def stop_tracking(
         if show_results:
             st.markdown(
                 """
-                <sub>Note: The widget counts add +1 each time streamlit executes your 
-                script (= each time the user input changes). E.g. for st.selectbox, it 
-                adds +1 for the currently selected option each time a user interacts 
-                with ANY component in your app.</sub>
+                <sub>
+                Note: The numbers in `"widgets"` only increase if the state of
+                the widget really changes, not every time streamlit runs the script.
+                </sub>
                 """,
                 unsafe_allow_html=True,
             )
