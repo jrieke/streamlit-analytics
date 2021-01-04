@@ -39,7 +39,7 @@ in the `with` block (both from `st.` and `st.sidebar.`).
 containers, expanders, or columns (e.g. `st.beta_expander().button("foo")`). Instead, 
 please use a with statement, e.g. `with st.beta_expander(): st.button("foo")`.</sub>
 
-To view the results, append `?analytics=on` to your app's URL 
+To view the results, open your app like normal and append `?analytics=on` to the URL 
 (e.g. http://localhost:8501/?analytics=on). The results are then shown directly below 
 your app (see image above).
 
