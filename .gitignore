@@ -1,5 +1,6 @@
 results.json
 .vscode
+streamlit_analytics/playground.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
