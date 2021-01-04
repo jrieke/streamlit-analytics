@@ -40,47 +40,51 @@ def _track_user():
         # print("Tracked new user")
 
 
-def _button_wrapper(label, *args, **kwargs):
-    clicked = _orig_button(label, *args, **kwargs)
+def _track_count(label, increase):
     if label not in counts["widgets"]:
         counts["widgets"][label] = 0
-    if clicked:
+    if increase:
         counts["widgets"][label] += 1
-    # if verbose:
-    #     print(f"Tracked button '{label}' -> clicked: {clicked}")
+
+
+def _track_select(label, options, selected):
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    for option in options:
+        if option not in counts["widgets"][label]:
+            counts["widgets"][label][option] = 0
+    counts["widgets"][label][selected] += 1
+
+
+def _track_value(label, value):
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    if value not in counts["widgets"][label]:
+        counts["widgets"][label][value] = 0
+    counts["widgets"][label][value] += 1
+
+
+def _button_wrapper(label, *args, **kwargs):
+    clicked = _orig_button(label, *args, **kwargs)
+    _track_count(label, clicked)
     return clicked
 
 
 def _checkbox_wrapper(label, *args, **kwargs):
     checked = _orig_checkbox(label, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = 0
-    if checked:
-        counts["widgets"][label] += 1
+    _track_count(label, checked)
     return checked
 
 
 def _radio_wrapper(label, options, *args, **kwargs):
     selected = _orig_radio(label, options, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    for option in options:
-        if option not in counts["widgets"][label]:
-            counts["widgets"][label][option] = 0
-    counts["widgets"][label][selected] += 1
+    _track_select(label, options, selected)
     return selected
 
 
 def _selectbox_wrapper(label, options, *args, **kwargs):
     selected = _orig_selectbox(label, options, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    for option in options:
-        if option not in counts["widgets"][label]:
-            counts["widgets"][label][option] = 0
-    counts["widgets"][label][selected] += 1
-    # if verbose:
-    #     print(f"Tracked selectbox '{label}' -> selected: {selected}")
+    _track_select(label, options, selected)
     return selected
 
 
@@ -99,89 +103,56 @@ def _multiselect_wrapper(label, options, *args, **kwargs):
 # TODO: Maybe do more of a histogram thing here.
 def _slider_wrapper(label, *args, **kwargs):
     number = _orig_slider(label, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if number not in counts["widgets"][label]:
-        counts["widgets"][label][number] = 0
-    counts["widgets"][label][number] += 1
+    _track_value(label, number)
+    return number
 
 
 def _select_slider_wrapper(label, options, *args, **kwargs):
     selected = _orig_select_slider(label, options, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    for option in options:
-        if option not in counts["widgets"][label]:
-            counts["widgets"][label][option] = 0
-    counts["widgets"][label][selected] += 1
-    # if verbose:
-    #     print(f"Tracked selectbox '{label}' -> selected: {selected}")
+    _track_select(label, options, selected)
     return selected
 
 
 def _text_input_wrapper(label, *args, **kwargs):
     text = _orig_text_input(label, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if text not in counts["widgets"][label]:
-        counts["widgets"][label][text] = 0
-    counts["widgets"][label][text] += 1
+    _track_value(label, text)
+    return text
 
 
 def _number_input_wrapper(label, *args, **kwargs):
     number = _orig_number_input(label, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if number not in counts["widgets"][label]:
-        counts["widgets"][label][number] = 0
-    counts["widgets"][label][number] += 1
+    _track_value(label, number)
+    return number
 
 
 def _text_area_wrapper(label, *args, **kwargs):
     text = _orig_text_area(label, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if text not in counts["widgets"][label]:
-        counts["widgets"][label][text] = 0
-    counts["widgets"][label][text] += 1
+    _track_value(label, text)
+    return text
 
 
 def _date_input_wrapper(label, *args, **kwargs):
     date = _orig_date_input(label, *args, **kwargs)
-    date = str(date)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if date not in counts["widgets"][label]:
-        counts["widgets"][label][date] = 0
-    counts["widgets"][label][date] += 1
+    _track_value(label, str(date))
+    return date
 
 
 def _time_input_wrapper(label, *args, **kwargs):
     time = _orig_time_input(label, *args, **kwargs)
-    time = str(time)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if time not in counts["widgets"][label]:
-        counts["widgets"][label][time] = 0
-    counts["widgets"][label][time] += 1
+    _track_value(label, str(time))
+    return time
 
 
 def _file_uploader_wrapper(label, *args, **kwargs):
     uploaded_file = _orig_file_uploader(label, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = 0
-    if uploaded_file is not None:
-        counts["widgets"][label] += 1
+    _track_count(label, uploaded_file is not None)
     return uploaded_file
 
 
 def _color_picker_wrapper(label, *args, **kwargs):
     color = _orig_color_picker(label, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if color not in counts["widgets"][label]:
-        counts["widgets"][label][color] = 0
-    counts["widgets"][label][color] += 1
+    _track_value(label, color)
+    return color
 
 
 def start_tracking(verbose: bool = False):
