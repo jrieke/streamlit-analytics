@@ -26,6 +26,7 @@ _orig_number_input = st.number_input
 _orig_text_area = st.text_area
 _orig_date_input = st.date_input
 _orig_time_input = st.time_input
+_orig_file_uploader = st.file_uploader
 
 
 def _track_user():
@@ -162,6 +163,15 @@ def _time_input_wrapper(label, *args, **kwargs):
     if time not in counts["widgets"][label]:
         counts["widgets"][label][time] = 0
     counts["widgets"][label][time] += 1
+    
+    
+def _file_uploader_wrapper(label, *args, **kwargs):
+    uploaded_file = _orig_file_uploader(label, *args, **kwargs)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = 0
+    if uploaded_file is not None:
+        counts["widgets"][label] += 1
+    return clicked
 
 
 def start_tracking(verbose: bool = False):
@@ -189,6 +199,7 @@ def start_tracking(verbose: bool = False):
     st.text_area = _text_area_wrapper
     st.date_input = _date_input_wrapper
     st.time_input = _time_input_wrapper
+    st.file_uploader = _file_uploader_wrapper
 
     if verbose:
         print()
@@ -224,6 +235,7 @@ def stop_tracking(
     st.text_area = _orig_text_area
     st.date_input = _orig_date_input
     st.time_input = _orig_time_input
+    st.file_uploader = _orig_file_uploader
 
     # Dump the counts to json file if `save_to_json` is set.
     # TODO: Make sure this is not locked if writing from multiple threads.
