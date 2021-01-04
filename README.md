@@ -24,6 +24,7 @@ Requires Python 3.6+
 ## How to use it
 
 ```python
+import streamlit as st
 import streamlit_analytics
 
 with streamlit_analytics.track():
