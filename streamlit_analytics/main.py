@@ -18,6 +18,7 @@ _orig_button = st.button
 _orig_checkbox = st.checkbox
 _orig_radio = st.radio
 _orig_selectbox = st.selectbox
+_orig_multiselect = st.multiselect
 _orig_text_input = st.text_input
 
 
@@ -75,6 +76,18 @@ def _selectbox_wrapper(label, options, *args, **kwargs):
     return selected
 
 
+def _multiselect_wrapper(label, options, *args, **kwargs):
+    selected = _orig_multiselect(label, options, *args, **kwargs)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    for option in options:
+        if option not in counts["widgets"][label]:
+            counts["widgets"][label][option] = 0
+    for sel in selected:
+        counts["widgets"][label][sel] += 1
+    return selected
+
+
 def _text_input_wrapper(label, *args, **kwargs):
     text = _orig_text_input(label, *args, **kwargs)
     if label not in counts["widgets"]:
@@ -101,6 +114,7 @@ def start_tracking(verbose: bool = False):
     st.checkbox = _checkbox_wrapper
     st.radio = _radio_wrapper
     st.selectbox = _selectbox_wrapper
+    st.multiselect = _multiselect_wrapper
     st.text_input = _text_input_wrapper
 
     if verbose:
@@ -129,6 +143,7 @@ def stop_tracking(
     st.checkbox = _orig_checkbox
     st.radio = _orig_radio
     st.selectbox = _orig_selectbox
+    st.multiselect = _orig_multiselect
     st.text_input = _orig_text_input
 
     # Dump the counts to json file if `save_to_json` is set.

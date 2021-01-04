@@ -8,4 +8,5 @@ with streamlit_analytics.track():
     st.checkbox("Check this")
     st.checkbox("...or this")
     st.radio("Select one radio", ("radio 1", "radio 2"))
+    st.multiselect("Select multiple", ("multiselect 1", "multiselect 2"))
     clicked = st.button("Click me")
