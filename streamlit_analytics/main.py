@@ -14,7 +14,7 @@ from . import session_state
 counts = {
     "total_pageviews": 0,
     "total_script_runs": 0,
-    "days": [{"date": str(datetime.date.today()), "pageviews": 0, "script_runs": 0}],
+    "per_day": {"days": [str(datetime.date.today())], "pageviews": [0], "script_runs": [0]},
     "widgets": {},
 }
 
@@ -54,15 +54,17 @@ _orig_sidebar_color_picker = st.sidebar.color_picker
 def _track_user(sess):
     """Track individual pageviews by storing user id to session state."""
     today = str(datetime.datetime.now().replace(microsecond=0, second=0))
-    if counts["days"][-1]["date"] != today:
+    if counts["per_day"]["days"][-1] != today:
         # TODO: Insert 0 for all days between today and last entry.
-        counts["days"].append({"date": today, "pageviews": 0, "script_runs": 0})
+        counts["per_day"]["days"].append(today)
+        counts["per_day"]["pageviews"].append(0)
+        counts["per_day"]["script_runs"].append(0)
     counts["total_script_runs"] += 1
-    counts["days"][-1]["script_runs"] += 1
+    counts["per_day"]["script_runs"][-1] += 1
     if not sess.user_tracked:
         sess.user_tracked = True
         counts["total_pageviews"] += 1
-        counts["days"][-1]["pageviews"] += 1
+        counts["per_day"]["pageviews"][-1] += 1
         # print("Tracked new user")
 
 
