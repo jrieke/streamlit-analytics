@@ -59,3 +59,11 @@ encryption.
 `save_to_json="path/to/file.json"` to `streamlit_analytics.track` or 
 `streamlit_analytics.stop_tracking`. At the moment, this may lead to problems with 
 concurrency if many users access the site at the same time. 
+
+
+## Next steps
+
+- enable tracking for sidebar, beta_container, beta_expander, beta_columns
+- do not track inputs at each script execution but only when they change (probably requires storing current inputs in session state or cache and checking at each execution what changed)
+- better display of results
+- track results (or at least pageviews) per day/hour and show chart
