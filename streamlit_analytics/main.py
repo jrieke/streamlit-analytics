@@ -25,6 +25,7 @@ _orig_text_input = st.text_input
 _orig_number_input = st.number_input
 _orig_text_area = st.text_area
 _orig_date_input = st.date_input
+_orig_time_input = st.time_input
 
 
 def _track_user():
@@ -153,6 +154,16 @@ def _date_input_wrapper(label, *args, **kwargs):
     counts["widgets"][label][date] += 1
 
 
+def _time_input_wrapper(label, *args, **kwargs):
+    time = _orig_time_input(label, *args, **kwargs)
+    time = str(time)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    if time not in counts["widgets"][label]:
+        counts["widgets"][label][time] = 0
+    counts["widgets"][label][time] += 1
+
+
 def start_tracking(verbose: bool = False):
     """
     Start tracking user inputs to a streamlit app.
@@ -177,6 +188,7 @@ def start_tracking(verbose: bool = False):
     st.number_input = _number_input_wrapper
     st.text_area = _text_area_wrapper
     st.date_input = _date_input_wrapper
+    st.time_input = _time_input_wrapper
 
     if verbose:
         print()
@@ -211,6 +223,7 @@ def stop_tracking(
     st.number_input = _orig_number_input
     st.text_area = _orig_text_area
     st.date_input = _orig_date_input
+    st.time_input = _orig_time_input
 
     # Dump the counts to json file if `save_to_json` is set.
     # TODO: Make sure this is not locked if writing from multiple threads.

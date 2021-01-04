@@ -15,3 +15,4 @@ with streamlit_analytics.track():
     st.number_input("number_input")
     st.text_area("text_area")
     st.date_input("date_input")
+    st.time_input("time_input")
