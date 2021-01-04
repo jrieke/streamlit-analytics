@@ -5,9 +5,9 @@
 **Track & visualize user inputs to your streamlit app.**
 
 This is a small extension for the fantastic [streamlit](https://www.streamlit.io/) 
-framework. With just one line of code, it counts page views, tracks all user inputs 
-to streamlit widgets, and visualizes the results directly in your browser. Think 
-Google Analytics but for streamlit.
+framework. With just one line of code, it counts page views, tracks all inputs to your 
+streamlit widgets across users, and visualizes the results directly in your browser. 
+Think Google Analytics but for streamlit.
 
 <p align="center">
     <img src="images/example.png" width=600>
@@ -32,7 +32,7 @@ with streamlit_analytics.track():
     st.button("Click me")
 ```
 
-That's it! 🎈 All pageviews and user inputs are now tracked and counted. Of course, 
+That's it! 🎈 All page views and user inputs are now tracked and counted. Of course, 
 you can also use [any other streamlit widget](https://docs.streamlit.io/en/stable/api.html#add-widgets-to-sidebar) 
 in the `with` block (both from `st.` and `st.sidebar.`). 
 
@@ -72,6 +72,5 @@ concurrency if many users access the site at the same time.
 PRs are welcome! If you want to work on any of these things, please open an issue to coordinate. 
 
 - enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
-- do not track inputs at each script execution but only when they change (probably requires storing current inputs in session state or cache and checking at each execution what changed)
 - better display of results
 - track results (or at least pageviews) per day/hour and show chart
