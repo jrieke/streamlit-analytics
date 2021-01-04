@@ -20,8 +20,6 @@ Google Analytics but for streamlit.
 pip install streamlit-analytics
 ```
 
-Requires Python 3.6+
-
 
 ## How to use it
 
