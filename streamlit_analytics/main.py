@@ -337,7 +337,7 @@ def stop_tracking(
             st.markdown(
                 """
                 <sub>
-                Note: The numbers in `"widgets"` only increase if the state of
+                Note: The numbers in "widgets" only increase if the state of
                 the widget really changes, not every time streamlit runs the script.
                 </sub>
                 """,
