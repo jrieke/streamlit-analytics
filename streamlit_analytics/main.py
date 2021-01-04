@@ -135,11 +135,10 @@ def stop_tracking(
         if show_results:
             st.markdown(
                 """
-                <sub>Note: The numbers below add +1 each time streamlit executes your script 
-                (= each time the user input changes). E.g. for st.selectbox, it adds +1 for 
-                the current selection each time a user interacts with ANY component in your 
-                app.</sub>
-                
+                <sub>Note: The widget counts add +1 each time streamlit executes your 
+                script (= each time the user input changes). E.g. for st.selectbox, it 
+                adds +1 for the currently selected option each time a user interacts 
+                with ANY component in your app.</sub>
                 """,
                 unsafe_allow_html=True,
             )
