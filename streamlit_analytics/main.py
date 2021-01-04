@@ -15,6 +15,7 @@ counts = {"pageviews": 0, "script_runs": 0, "widgets": {}}
 # Store original streamlit functions. They will be monkey-patched with some wrappers
 # in `start_tracking` (see wrapper functions below).
 _orig_button = st.button
+_orig_checkbox = st.checkbox
 _orig_selectbox = st.selectbox
 _orig_text_input = st.text_input
 
@@ -26,7 +27,7 @@ def _track_user():
     if not sess.user_tracked:
         sess.user_tracked = True
         counts["pageviews"] += 1
-        print("Tracked new user")
+        # print("Tracked new user")
 
 
 def _button_wrapper(label, *args, **kwargs):
@@ -38,6 +39,15 @@ def _button_wrapper(label, *args, **kwargs):
     # if verbose:
     #     print(f"Tracked button '{label}' -> clicked: {clicked}")
     return clicked
+
+
+def _checkbox_wrapper(label, *args, **kwargs):
+    checked = _orig_checkbox(label, *args, **kwargs)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = 0
+    if checked:
+        counts["widgets"][label] += 1
+    return checked
 
 
 def _selectbox_wrapper(label, options, *args, **kwargs):
@@ -76,6 +86,7 @@ def start_tracking(verbose: bool = False):
 
     # Monkey-patch streamlit to call the wrappers above.
     st.button = _button_wrapper
+    st.checkbox = _checkbox_wrapper
     st.selectbox = _selectbox_wrapper
     st.text_input = _text_input_wrapper
 
@@ -102,6 +113,7 @@ def stop_tracking(
 
     # Reset streamlit functions.
     st.button = _orig_button
+    st.checkbox = _orig_checkbox
     st.selectbox = _orig_selectbox
     st.text_input = _orig_text_input
 
