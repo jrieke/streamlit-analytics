@@ -5,16 +5,20 @@ import json
 import datetime
 
 import streamlit as st
+import altair as alt
+import pandas as pd
 
 from . import session_state
 
 
 # Dict that holds all analytics results. Note that this is persistent across users,
 # as modules are only imported once by a streamlit app.
+yesterday = datetime.datetime.now().replace(microsecond=0, second=0)
+yesterday = yesterday - datetime.timedelta(minutes=1)
 counts = {
     "total_pageviews": 0,
     "total_script_runs": 0,
-    "per_day": {"days": [str(datetime.date.today())], "pageviews": [0], "script_runs": [0]},
+    "per_day": {"days": [str(yesterday)], "pageviews": [0], "script_runs": [0],},
     "widgets": {},
 }
 
@@ -347,16 +351,40 @@ def stop_tracking(
                 if len(password_input) > 0:
                     st.write("Nope, that's not correct ☝️")
         if show_results:
+
+            st.header("Traffic")
+            st.write(
+                f"**Total:** {counts['total_pageviews']} pageviews, {counts['total_script_runs']} script runs"
+            )
+
+            # Plot chart with pageviews.
+            df = pd.DataFrame(counts["per_day"])
+            base = alt.Chart(df).encode(x="days:T")
+            line1 = base.mark_line(point=True, stroke="#5276A7").encode(
+                alt.Y(
+                    "pageviews:Q",
+                    axis=alt.Axis(title="pageviews", titleColor="#5276A7"),
+                    # scale=alt.Scale(domain=(0, df["pageviews"].max() + 1)),
+                )
+            )
+            line2 = base.mark_line(point=True, stroke="#57A44C").encode(
+                alt.Y(
+                    "script_runs:Q",
+                    axis=alt.Axis(title="script_runs", titleColor="#57A44C"),
+                )
+            )
+            layer = alt.layer(line1, line2).resolve_scale(y="independent")
+            st.altair_chart(layer, use_container_width=True)
+
+            st.header("Widget interactions")
             st.markdown(
                 """
-                <sub>
-                Note: The numbers in "widgets" only increase if the state of
-                the widget really changes, not every time streamlit runs the script.
-                </sub>
+                Note: The numbers only increase if the state of the widget really 
+                changes, not every time streamlit runs the script.
                 """,
                 unsafe_allow_html=True,
             )
-            st.write(counts)
+            st.write(counts["widgets"])
 
 
 @contextmanager
