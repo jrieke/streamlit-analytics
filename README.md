@@ -72,5 +72,4 @@ concurrency if many users access the site at the same time.
 PRs are welcome! If you want to work on any of these things, please open an issue to coordinate. 
 
 - enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
-- better display of results
-- track results (or at least pageviews) per day/hour and show chart
+- persist results after re-starting app
