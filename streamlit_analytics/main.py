@@ -23,6 +23,7 @@ _orig_slider = st.slider
 _orig_select_slider = st.select_slider
 _orig_text_input = st.text_input
 _orig_number_input = st.number_input
+_orig_text_area = st.text_area
 
 
 def _track_user():
@@ -132,6 +133,15 @@ def _number_input_wrapper(label, *args, **kwargs):
     counts["widgets"][label][number] += 1
 
 
+def _text_area_wrapper(label, *args, **kwargs):
+    text = _orig_text_area(label, *args, **kwargs)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    if text not in counts["widgets"][label]:
+        counts["widgets"][label][text] = 0
+    counts["widgets"][label][text] += 1
+
+
 def start_tracking(verbose: bool = False):
     """
     Start tracking user inputs to a streamlit app.
@@ -154,6 +164,7 @@ def start_tracking(verbose: bool = False):
     st.select_slider = _select_slider_wrapper
     st.text_input = _text_input_wrapper
     st.number_input = _number_input_wrapper
+    st.text_area = _text_area_wrapper
 
     if verbose:
         print()
@@ -186,6 +197,7 @@ def stop_tracking(
     st.select_slider = _orig_select_slider
     st.text_input = _orig_text_input
     st.number_input = _orig_number_input
+    st.text_area = _orig_text_area
 
     # Dump the counts to json file if `save_to_json` is set.
     # TODO: Make sure this is not locked if writing from multiple threads.
