@@ -1,8 +1,8 @@
-# streamlit-analytics
+# streamlit-analytics 👀
 
 [![PyPi](https://img.shields.io/pypi/v/streamlit-analytics)](https://pypi.org/project/streamlit-analytics/)
 
-**👀 Track & visualize user inputs to your streamlit app**
+**Track & visualize user inputs to your streamlit app**
 
 This is a small extension for the fantastic [streamlit](https://www.streamlit.io/) 
 framework. With just one line of code, it counts page views, tracks all user inputs 
