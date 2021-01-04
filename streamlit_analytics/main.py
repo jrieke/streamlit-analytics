@@ -5,10 +5,12 @@ import json
 
 import streamlit as st
 
+from . import session_state
+
 
 # Dict that holds all analytics results. Note that this is persistent across users,
 # as modules are only imported once by a streamlit app.
-counts = {}
+counts = {"pageviews": 0, "script_runs": 0, "widgets": {}}
 
 # Store original streamlit functions. They will be monkey-patched with some wrappers
 # in `start_tracking` (see wrapper functions below).
@@ -17,12 +19,22 @@ _orig_selectbox = st.selectbox
 _orig_text_input = st.text_input
 
 
+def _track_user():
+    """Track individual pageviews by storing user id to session state."""
+    counts["script_runs"] += 1
+    sess = session_state.get(user_tracked=False)
+    if not sess.user_tracked:
+        sess.user_tracked = True
+        counts["pageviews"] += 1
+        print("Tracked new user")
+
+
 def _button_wrapper(label, *args, **kwargs):
     clicked = _orig_button(label, *args, **kwargs)
-    if label not in counts:
-        counts[label] = 0
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = 0
     if clicked:
-        counts[label] += 1
+        counts["widgets"][label] += 1
     # if verbose:
     #     print(f"Tracked button '{label}' -> clicked: {clicked}")
     return clicked
@@ -30,12 +42,12 @@ def _button_wrapper(label, *args, **kwargs):
 
 def _selectbox_wrapper(label, options, *args, **kwargs):
     selected = _orig_selectbox(label, options, *args, **kwargs)
-    if label not in counts:
-        counts[label] = {}
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
     for option in options:
-        if option not in counts[label]:
-            counts[label][option] = 0
-    counts[label][selected] += 1
+        if option not in counts["widgets"][label]:
+            counts["widgets"][label][option] = 0
+    counts["widgets"][label][selected] += 1
     # if verbose:
     #     print(f"Tracked selectbox '{label}' -> selected: {selected}")
     return selected
@@ -43,11 +55,11 @@ def _selectbox_wrapper(label, options, *args, **kwargs):
 
 def _text_input_wrapper(label, *args, **kwargs):
     text = _orig_text_input(label, *args, **kwargs)
-    if label not in counts:
-        counts[label] = {}
-    if text not in counts[label]:
-        counts[label][text] = 0
-    counts[label][text] += 1
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    if text not in counts["widgets"][label]:
+        counts["widgets"][label][text] = 0
+    counts["widgets"][label][text] += 1
 
 
 def start_tracking(verbose: bool = False):
@@ -60,6 +72,8 @@ def start_tracking(verbose: bool = False):
     `with streamlit_analytics.track():`. 
     """
 
+    _track_user()
+
     # Monkey-patch streamlit to call the wrappers above.
     st.button = _button_wrapper
     st.selectbox = _selectbox_wrapper
@@ -67,7 +81,7 @@ def start_tracking(verbose: bool = False):
 
     if verbose:
         print()
-        print("Tracking script execution with streamlit-analytics")
+        print("Tracking script execution with streamlit-analytics...")
 
 
 def stop_tracking(
