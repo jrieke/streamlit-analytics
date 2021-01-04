@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit_analytics
+from datetime import datetime
 
 with streamlit_analytics.track():
     st.title("Test app with all widgets")
@@ -13,3 +14,4 @@ with streamlit_analytics.track():
     st.text_input("text_input")
     st.number_input("number_input")
     st.text_area("text_area")
+    st.date_input("date_input")
