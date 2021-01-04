@@ -1,6 +1,6 @@
 # streamlit-analytics
 
-[![Python versions](https://img.shields.io/pypi/pyversions/streamlit-analytics)](https://pypi.org/project/streamlit-analytics/)
+[![PyPi](https://img.shields.io/pypi/v/streamlit-analytics)](https://pypi.org/project/streamlit-analytics/)
 
 **👀 Track & visualize user inputs to your streamlit app**
 
@@ -19,6 +19,8 @@ Google Analytics but for streamlit.
 ```bash
 pip install streamlit-analytics
 ```
+
+Requires Python 3.6+
 
 
 ## How to use it
