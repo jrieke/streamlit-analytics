@@ -17,3 +17,4 @@ with streamlit_analytics.track():
     st.date_input("date_input")
     st.time_input("time_input")
     st.file_uploader("file_uploader")
+    st.color_picker("color_picker")

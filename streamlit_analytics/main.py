@@ -27,6 +27,7 @@ _orig_text_area = st.text_area
 _orig_date_input = st.date_input
 _orig_time_input = st.time_input
 _orig_file_uploader = st.file_uploader
+_orig_color_picker = st.color_picker
 
 
 def _track_user():
@@ -174,6 +175,15 @@ def _file_uploader_wrapper(label, *args, **kwargs):
     return uploaded_file
 
 
+def _color_picker_wrapper(label, *args, **kwargs):
+    color = _orig_color_picker(label, *args, **kwargs)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    if color not in counts["widgets"][label]:
+        counts["widgets"][label][color] = 0
+    counts["widgets"][label][color] += 1
+
+
 def start_tracking(verbose: bool = False):
     """
     Start tracking user inputs to a streamlit app.
@@ -200,6 +210,7 @@ def start_tracking(verbose: bool = False):
     st.date_input = _date_input_wrapper
     st.time_input = _time_input_wrapper
     st.file_uploader = _file_uploader_wrapper
+    st.color_picker = _color_picker_wrapper
 
     if verbose:
         print()
@@ -236,6 +247,7 @@ def stop_tracking(
     st.date_input = _orig_date_input
     st.time_input = _orig_time_input
     st.file_uploader = _orig_file_uploader
+    st.color_picker = _orig_color_picker
 
     # Dump the counts to json file if `save_to_json` is set.
     # TODO: Make sure this is not locked if writing from multiple threads.
