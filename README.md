@@ -1,4 +1,4 @@
-# streamlit-analytics 👀
+# streamlit-analytics &nbsp;👀
 
 [![PyPi](https://img.shields.io/pypi/v/streamlit-analytics)](https://pypi.org/project/streamlit-analytics/)
 
