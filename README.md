@@ -31,14 +31,13 @@ with streamlit_analytics.track():
     st.button("Click me")
 ```
 
-That's it! 🎈 All pageview and user inputs will now be tracked and counted. Of course, 
+That's it! 🎈 All pageviews and user inputs are now tracked and counted. Of course, 
 you can also use [any other streamlit widget](https://docs.streamlit.io/en/stable/api.html#add-widgets-to-sidebar) 
 in the `with` block (both from `st.` and `st.sidebar.`). 
 
-<sub>Note: The only thing that doesn't
-work (yet) is tracking widgets created directly from containers, expanders, or columns
-(e.g. `st.beta_expander().button("foo")`). Instead, please use a with statement, e.g.
-`with st.beta_expander(): st.button("foo")`.</sub>
+<sub>Note: One thing that doesn't work (yet) is tracking widgets created directly from 
+containers, expanders, or columns (e.g. `st.beta_expander().button("foo")`). Instead, 
+please use a with statement, e.g. `with st.beta_expander(): st.button("foo")`.</sub>
 
 To view the results, append `?analytics=on` to your app's URL 
 (e.g. http://localhost:8501/?analytics=on). The results are then shown directly below 
