@@ -3,9 +3,9 @@
 **👀 Track & visualize user inputs to your streamlit app**
 
 This is a small extension for the fantastic [streamlit](https://www.streamlit.io/) 
-framework. With just one line of code, it tracks and counts all user inputs to your 
-streamlit app and visualizes the results directly in your browser. Think Google 
-Analytics but for streamlit.
+framework. With just one line of code, it counts page views, tracks all user inputs 
+to your streamlit widgets and visualizes the results directly in your browser. Think 
+Google Analytics but for streamlit.
 
 <p align="center">
     <img src="images/example.png" width=600>
