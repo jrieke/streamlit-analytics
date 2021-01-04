@@ -32,8 +32,7 @@ with streamlit_analytics.track():
 ```
 
 That's it! 🎈 All inputs & clicks will now be tracked and counted. Of course, you
-can also use any other streamlit component in the `with` block (currently supported:
-button, text_input, selectbox). 
+can also use [any other streamlit widget](https://docs.streamlit.io/en/stable/api.html#add-widgets-to-sidebar) in the `with` block.
 
 To view the results, append `?analytics=on` to your app's URL 
 (e.g. http://localhost:8501/?analytics=on). The results are then shown directly below 
