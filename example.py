@@ -11,4 +11,5 @@ with streamlit_analytics.track():
     st.multiselect("Select multiple", ("multiselect 1", "multiselect 2"))
     st.slider("Slide along")
     st.select_slider("Select slider", ("option 1", "option 2"))
+    st.number_input("Input a number")
     clicked = st.button("Click me")
