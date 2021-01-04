@@ -10,4 +10,5 @@ with streamlit_analytics.track():
     st.radio("Select one radio", ("radio 1", "radio 2"))
     st.multiselect("Select multiple", ("multiselect 1", "multiselect 2"))
     st.slider("Slide along")
+    st.select_slider("Select slider", ("option 1", "option 2"))
     clicked = st.button("Click me")

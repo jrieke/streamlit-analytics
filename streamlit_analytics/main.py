@@ -20,6 +20,7 @@ _orig_radio = st.radio
 _orig_selectbox = st.selectbox
 _orig_multiselect = st.multiselect
 _orig_slider = st.slider
+_orig_select_slider = st.select_slider
 _orig_text_input = st.text_input
 
 
@@ -99,6 +100,19 @@ def _slider_wrapper(label, *args, **kwargs):
     counts["widgets"][label][number] += 1
 
 
+def _select_slider_wrapper(label, options, *args, **kwargs):
+    selected = _orig_select_slider(label, options, *args, **kwargs)
+    if label not in counts["widgets"]:
+        counts["widgets"][label] = {}
+    for option in options:
+        if option not in counts["widgets"][label]:
+            counts["widgets"][label][option] = 0
+    counts["widgets"][label][selected] += 1
+    # if verbose:
+    #     print(f"Tracked selectbox '{label}' -> selected: {selected}")
+    return selected
+
+
 def _text_input_wrapper(label, *args, **kwargs):
     text = _orig_text_input(label, *args, **kwargs)
     if label not in counts["widgets"]:
@@ -127,6 +141,7 @@ def start_tracking(verbose: bool = False):
     st.selectbox = _selectbox_wrapper
     st.multiselect = _multiselect_wrapper
     st.slider = _slider_wrapper
+    st.select_slider = _select_slider_wrapper
     st.text_input = _text_input_wrapper
 
     if verbose:
@@ -157,6 +172,7 @@ def stop_tracking(
     st.selectbox = _orig_selectbox
     st.multiselect = _orig_multiselect
     st.slider = _orig_slider
+    st.select_slider = _orig_select_slider
     st.text_input = _orig_text_input
 
     # Dump the counts to json file if `save_to_json` is set.
