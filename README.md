@@ -63,6 +63,8 @@ concurrency if many users access the site at the same time.
 
 ## Next steps
 
+PRs are welcome! If you want to work on any of these things, please open an issue to coordinate. 
+
 - enable tracking for sidebar, beta_container, beta_expander, beta_columns
 - do not track inputs at each script execution but only when they change (probably requires storing current inputs in session state or cache and checking at each execution what changed)
 - better display of results
