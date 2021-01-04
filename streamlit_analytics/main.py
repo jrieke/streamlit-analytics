@@ -30,6 +30,21 @@ _orig_time_input = st.time_input
 _orig_file_uploader = st.file_uploader
 _orig_color_picker = st.color_picker
 
+_orig_sidebar_button = st.sidebar.button
+_orig_sidebar_checkbox = st.sidebar.checkbox
+_orig_sidebar_radio = st.sidebar.radio
+_orig_sidebar_selectbox = st.sidebar.selectbox
+_orig_sidebar_multiselect = st.sidebar.multiselect
+_orig_sidebar_slider = st.sidebar.slider
+_orig_sidebar_select_slider = st.sidebar.select_slider
+_orig_sidebar_text_input = st.sidebar.text_input
+_orig_sidebar_number_input = st.sidebar.number_input
+_orig_sidebar_text_area = st.sidebar.text_area
+_orig_sidebar_date_input = st.sidebar.date_input
+_orig_sidebar_time_input = st.sidebar.time_input
+_orig_sidebar_file_uploader = st.sidebar.file_uploader
+_orig_sidebar_color_picker = st.sidebar.color_picker
+
 
 def _track_user():
     """Track individual pageviews by storing user id to session state."""
@@ -168,6 +183,38 @@ def start_tracking(verbose: bool = False):
     st.time_input = _wrap_value(_orig_time_input)
     st.file_uploader = _wrap_file_uploader(_orig_file_uploader)
     st.color_picker = _wrap_value(_orig_color_picker)
+    
+    st.sidebar.button = _wrap_bool(_orig_sidebar_button)
+    st.sidebar.checkbox = _wrap_bool(_orig_sidebar_checkbox)
+    st.sidebar.radio = _wrap_select(_orig_sidebar_radio)
+    st.sidebar.selectbox = _wrap_select(_orig_sidebar_selectbox)
+    st.sidebar.multiselect = _wrap_multiselect(_orig_sidebar_multiselect)
+    st.sidebar.slider = _wrap_value(_orig_sidebar_slider)
+    st.sidebar.select_slider = _wrap_select(_orig_sidebar_select_slider)
+    st.sidebar.text_input = _wrap_value(_orig_sidebar_text_input)
+    st.sidebar.number_input = _wrap_value(_orig_sidebar_number_input)
+    st.sidebar.text_area = _wrap_value(_orig_sidebar_text_area)
+    st.sidebar.date_input = _wrap_value(_orig_sidebar_date_input)
+    st.sidebar.time_input = _wrap_value(_orig_sidebar_time_input)
+    st.sidebar.file_uploader = _wrap_file_uploader(_orig_sidebar_file_uploader)
+    st.sidebar.color_picker = _wrap_value(_orig_sidebar_color_picker)
+
+    # replacements = {
+    #     "button": _wrap_bool,
+    #     "checkbox": _wrap_bool,
+    #     "radio": _wrap_select,
+    #     "selectbox": _wrap_select,
+    #     "multiselect": _wrap_multiselect,
+    #     "slider": _wrap_value,
+    #     "select_slider": _wrap_select,
+    #     "text_input": _wrap_value,
+    #     "number_input": _wrap_value,
+    #     "text_area": _wrap_value,
+    #     "date_input": _wrap_value,
+    #     "time_input": _wrap_value,
+    #     "file_uploader": _wrap_file_uploader,
+    #     "color_picker": _wrap_value,
+    # }
 
     if verbose:
         print()
@@ -205,6 +252,21 @@ def stop_tracking(
     st.time_input = _orig_time_input
     st.file_uploader = _orig_file_uploader
     st.color_picker = _orig_color_picker
+    
+    st.sidebar.button = _orig_sidebar_button
+    st.sidebar.checkbox = _orig_sidebar_checkbox
+    st.sidebar.radio = _orig_sidebar_radio
+    st.sidebar.selectbox = _orig_sidebar_selectbox
+    st.sidebar.multiselect = _orig_sidebar_multiselect
+    st.sidebar.slider = _orig_sidebar_slider
+    st.sidebar.select_slider = _orig_sidebar_select_slider
+    st.sidebar.text_input = _orig_sidebar_text_input
+    st.sidebar.number_input = _orig_sidebar_number_input
+    st.sidebar.text_area = _orig_sidebar_text_area
+    st.sidebar.date_input = _orig_sidebar_date_input
+    st.sidebar.time_input = _orig_sidebar_time_input
+    st.sidebar.file_uploader = _orig_sidebar_file_uploader
+    st.sidebar.color_picker = _orig_sidebar_color_picker
 
     # Dump the counts to json file if `save_to_json` is set.
     # TODO: Make sure this is not locked if writing from multiple threads.
