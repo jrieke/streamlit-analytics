@@ -17,7 +17,7 @@ setup(
     version=version,
     author="Johannes Rieke",
     author_email="johannes.rieke@gmail.com",
-    description="Track & visualize user inputs to your streamlit app",
+    description="Track & visualize user interactions with your streamlit app",
     long_description=readme,
     long_description_content_type="text/markdown",
     url="https://github.com/jrieke/streamlit-analytics",
