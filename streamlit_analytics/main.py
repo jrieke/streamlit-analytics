@@ -2,6 +2,7 @@ from typing import Union
 from contextlib import contextmanager
 from pathlib import Path
 import json
+import datetime
 
 import streamlit as st
 
@@ -40,119 +41,104 @@ def _track_user():
         # print("Tracked new user")
 
 
-def _track_count(label, increase):
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = 0
-    if increase:
-        counts["widgets"][label] += 1
+def _wrap_bool(func):
+    """
+    Wrap a streamlit function that returns a bool, e.g. st.button, st.checkbox.
+    """
+
+    def new_func(label, *args, **kwargs):
+        checked = func(label, *args, **kwargs)
+        if label not in counts["widgets"]:
+            counts["widgets"][label] = 0
+        if checked:
+            counts["widgets"][label] += 1
+        return checked
+
+    return new_func
 
 
-def _track_select(label, options, selected):
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    for option in options:
-        if option not in counts["widgets"][label]:
-            counts["widgets"][label][option] = 0
-    counts["widgets"][label][selected] += 1
+def _wrap_file_uploader(func):
+    """
+    Wrap st.file_uploader.
+    """
+
+    def new_func(label, *args, **kwargs):
+        uploaded_file = func(label, *args, **kwargs)
+        if label not in counts["widgets"]:
+            counts["widgets"][label] = 0
+        if uploaded_file is not None:
+            counts["widgets"][label] += 1
+        return uploaded_file
+
+    return new_func
 
 
-def _track_value(label, value):
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    if value not in counts["widgets"][label]:
-        counts["widgets"][label][value] = 0
-    counts["widgets"][label][value] += 1
+def _wrap_select(func):
+    """
+    Wrap a streamlit function the returns one selected element out of multiple options,
+    e.g. st.radio, st.selectbox, st.select_slider.
+    """
+
+    def new_func(label, options, *args, **kwargs):
+        selected = func(label, options, *args, **kwargs)
+        if label not in counts["widgets"]:
+            counts["widgets"][label] = {}
+        for option in options:
+            if option not in counts["widgets"][label]:
+                counts["widgets"][label][option] = 0
+        counts["widgets"][label][selected] += 1
+        return selected
+
+    return new_func
 
 
-def _button_wrapper(label, *args, **kwargs):
-    clicked = _orig_button(label, *args, **kwargs)
-    _track_count(label, clicked)
-    return clicked
+def _wrap_multiselect(func):
+    """
+    Wrap a streamlit function the returns multiple selected elements out of multiple 
+    options, e.g. st.multiselect.
+    """
+
+    def new_func(label, options, *args, **kwargs):
+        selected = func(label, options, *args, **kwargs)
+        if label not in counts["widgets"]:
+            counts["widgets"][label] = {}
+        for option in options:
+            if option not in counts["widgets"][label]:
+                counts["widgets"][label][option] = 0
+        for sel in selected:
+            counts["widgets"][label][sel] += 1
+        return selected
+
+    return new_func
 
 
-def _checkbox_wrapper(label, *args, **kwargs):
-    checked = _orig_checkbox(label, *args, **kwargs)
-    _track_count(label, checked)
-    return checked
+def _wrap_value(func):
+    """
+    Wrap a streamlit function that returns a single value (str/int/float/datetime/...),
+    e.g. st.slider, st.text_input, st.number_input, st.text_area, st.date_input, 
+    st.time_input, st.color_picker.
+    """
 
+    def new_func(label, *args, **kwargs):
+        value = func(label, *args, **kwargs)
+        if label not in counts["widgets"]:
+            counts["widgets"][label] = {}
 
-def _radio_wrapper(label, options, *args, **kwargs):
-    selected = _orig_radio(label, options, *args, **kwargs)
-    _track_select(label, options, selected)
-    return selected
+        # st.date_input and st.time return datetime object, convert to str
+        formatted_value = value
+        if (
+            isinstance(value, datetime.datetime)
+            or isinstance(value, datetime.date)
+            or isinstance(value, datetime.time)
+        ):
+            formatted_value = str(value)
 
+        if formatted_value not in counts["widgets"][label]:
+            counts["widgets"][label][formatted_value] = 0
+        counts["widgets"][label][formatted_value] += 1
+        return value
 
-def _selectbox_wrapper(label, options, *args, **kwargs):
-    selected = _orig_selectbox(label, options, *args, **kwargs)
-    _track_select(label, options, selected)
-    return selected
-
-
-def _multiselect_wrapper(label, options, *args, **kwargs):
-    selected = _orig_multiselect(label, options, *args, **kwargs)
-    if label not in counts["widgets"]:
-        counts["widgets"][label] = {}
-    for option in options:
-        if option not in counts["widgets"][label]:
-            counts["widgets"][label][option] = 0
-    for sel in selected:
-        counts["widgets"][label][sel] += 1
-    return selected
-
-
-# TODO: Maybe do more of a histogram thing here.
-def _slider_wrapper(label, *args, **kwargs):
-    number = _orig_slider(label, *args, **kwargs)
-    _track_value(label, number)
-    return number
-
-
-def _select_slider_wrapper(label, options, *args, **kwargs):
-    selected = _orig_select_slider(label, options, *args, **kwargs)
-    _track_select(label, options, selected)
-    return selected
-
-
-def _text_input_wrapper(label, *args, **kwargs):
-    text = _orig_text_input(label, *args, **kwargs)
-    _track_value(label, text)
-    return text
-
-
-def _number_input_wrapper(label, *args, **kwargs):
-    number = _orig_number_input(label, *args, **kwargs)
-    _track_value(label, number)
-    return number
-
-
-def _text_area_wrapper(label, *args, **kwargs):
-    text = _orig_text_area(label, *args, **kwargs)
-    _track_value(label, text)
-    return text
-
-
-def _date_input_wrapper(label, *args, **kwargs):
-    date = _orig_date_input(label, *args, **kwargs)
-    _track_value(label, str(date))
-    return date
-
-
-def _time_input_wrapper(label, *args, **kwargs):
-    time = _orig_time_input(label, *args, **kwargs)
-    _track_value(label, str(time))
-    return time
-
-
-def _file_uploader_wrapper(label, *args, **kwargs):
-    uploaded_file = _orig_file_uploader(label, *args, **kwargs)
-    _track_count(label, uploaded_file is not None)
-    return uploaded_file
-
-
-def _color_picker_wrapper(label, *args, **kwargs):
-    color = _orig_color_picker(label, *args, **kwargs)
-    _track_value(label, color)
-    return color
+    return new_func
 
 
 def start_tracking(verbose: bool = False):
@@ -168,20 +154,20 @@ def start_tracking(verbose: bool = False):
     _track_user()
 
     # Monkey-patch streamlit to call the wrappers above.
-    st.button = _button_wrapper
-    st.checkbox = _checkbox_wrapper
-    st.radio = _radio_wrapper
-    st.selectbox = _selectbox_wrapper
-    st.multiselect = _multiselect_wrapper
-    st.slider = _slider_wrapper
-    st.select_slider = _select_slider_wrapper
-    st.text_input = _text_input_wrapper
-    st.number_input = _number_input_wrapper
-    st.text_area = _text_area_wrapper
-    st.date_input = _date_input_wrapper
-    st.time_input = _time_input_wrapper
-    st.file_uploader = _file_uploader_wrapper
-    st.color_picker = _color_picker_wrapper
+    st.button = _wrap_bool(_orig_button)
+    st.checkbox = _wrap_bool(_orig_checkbox)
+    st.radio = _wrap_select(_orig_radio)
+    st.selectbox = _wrap_select(_orig_selectbox)
+    st.multiselect = _wrap_multiselect(_orig_multiselect)
+    st.slider = _wrap_value(_orig_slider)
+    st.select_slider = _wrap_select(_orig_select_slider)
+    st.text_input = _wrap_value(_orig_text_input)
+    st.number_input = _wrap_value(_orig_number_input)
+    st.text_area = _wrap_value(_orig_text_area)
+    st.date_input = _wrap_value(_orig_date_input)
+    st.time_input = _wrap_value(_orig_time_input)
+    st.file_uploader = _wrap_file_uploader(_orig_file_uploader)
+    st.color_picker = _wrap_value(_orig_color_picker)
 
     if verbose:
         print()
