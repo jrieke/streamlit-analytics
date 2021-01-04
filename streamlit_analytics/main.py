@@ -55,19 +55,36 @@ def _track_user(sess):
         # print("Tracked new user")
 
 
-def _wrap_bool(func, state_dict):
+def _wrap_checkbox(func, state_dict):
     """
-    Wrap a streamlit function that returns a bool, e.g. st.button, st.checkbox.
+    Wrap st.checkbox.
     """
 
     def new_func(label, *args, **kwargs):
         checked = func(label, *args, **kwargs)
-        state_dict[label] = checked
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
-        if checked:
+        if checked != state_dict.get(label, None):
             counts["widgets"][label] += 1
+        state_dict[label] = checked
         return checked
+
+    return new_func
+
+
+def _wrap_button(func, state_dict):
+    """
+    Wrap st.button.
+    """
+
+    def new_func(label, *args, **kwargs):
+        clicked = func(label, *args, **kwargs)
+        if label not in counts["widgets"]:
+            counts["widgets"][label] = 0
+        if clicked:
+            counts["widgets"][label] += 1
+        state_dict[label] = clicked
+        return clicked
 
     return new_func
 
@@ -79,11 +96,15 @@ def _wrap_file_uploader(func, state_dict):
 
     def new_func(label, *args, **kwargs):
         uploaded_file = func(label, *args, **kwargs)
-        state_dict[label] = uploaded_file is not None
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
-        if uploaded_file is not None:
+        # TODO: Right now this doesn't track when multiple files are uploaded one after
+        #   another. Maybe compare files directly (but probably not very clever to 
+        #   store in session state) or hash them somehow and check if a different file
+        #   was uploaded.
+        if uploaded_file and not state_dict.get(label, None):
             counts["widgets"][label] += 1
+        state_dict[label] = bool(uploaded_file)
         return uploaded_file
 
     return new_func
@@ -97,13 +118,14 @@ def _wrap_select(func, state_dict):
 
     def new_func(label, options, *args, **kwargs):
         selected = func(label, options, *args, **kwargs)
-        state_dict[label] = selected
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
         for option in options:
             if option not in counts["widgets"][label]:
                 counts["widgets"][label][option] = 0
-        counts["widgets"][label][selected] += 1
+        if selected != state_dict.get(label, None):
+            counts["widgets"][label][selected] += 1
+        state_dict[label] = selected
         return selected
 
     return new_func
@@ -117,14 +139,15 @@ def _wrap_multiselect(func, state_dict):
 
     def new_func(label, options, *args, **kwargs):
         selected = func(label, options, *args, **kwargs)
-        state_dict[label] = selected
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
         for option in options:
             if option not in counts["widgets"][label]:
                 counts["widgets"][label][option] = 0
         for sel in selected:
-            counts["widgets"][label][sel] += 1
+            if sel not in state_dict.get(label, []):
+                counts["widgets"][label][sel] += 1
+        state_dict[label] = selected
         return selected
 
     return new_func
@@ -139,7 +162,6 @@ def _wrap_value(func, state_dict):
 
     def new_func(label, *args, **kwargs):
         value = func(label, *args, **kwargs)
-        state_dict[label] = value
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
 
@@ -154,7 +176,9 @@ def _wrap_value(func, state_dict):
 
         if formatted_value not in counts["widgets"][label]:
             counts["widgets"][label][formatted_value] = 0
-        counts["widgets"][label][formatted_value] += 1
+        if formatted_value != state_dict.get(label, None):
+            counts["widgets"][label][formatted_value] += 1
+        state_dict[label] = formatted_value
         return value
 
     return new_func
@@ -174,8 +198,8 @@ def start_tracking(verbose: bool = False):
     _track_user(sess)
 
     # Monkey-patch streamlit to call the wrappers above.
-    st.button = _wrap_bool(_orig_button, sess.state_dict)
-    st.checkbox = _wrap_bool(_orig_checkbox, sess.state_dict)
+    st.button = _wrap_button(_orig_button, sess.state_dict)
+    st.checkbox = _wrap_checkbox(_orig_checkbox, sess.state_dict)
     st.radio = _wrap_select(_orig_radio, sess.state_dict)
     st.selectbox = _wrap_select(_orig_selectbox, sess.state_dict)
     st.multiselect = _wrap_multiselect(_orig_multiselect, sess.state_dict)
@@ -189,8 +213,8 @@ def start_tracking(verbose: bool = False):
     st.file_uploader = _wrap_file_uploader(_orig_file_uploader, sess.state_dict)
     st.color_picker = _wrap_value(_orig_color_picker, sess.state_dict)
 
-    st.sidebar.button = _wrap_bool(_orig_sidebar_button, sess.state_dict)
-    st.sidebar.checkbox = _wrap_bool(_orig_sidebar_checkbox, sess.state_dict)
+    st.sidebar.button = _wrap_button(_orig_sidebar_button, sess.state_dict)
+    st.sidebar.checkbox = _wrap_checkbox(_orig_sidebar_checkbox, sess.state_dict)
     st.sidebar.radio = _wrap_select(_orig_sidebar_radio, sess.state_dict)
     st.sidebar.selectbox = _wrap_select(_orig_sidebar_selectbox, sess.state_dict)
     st.sidebar.multiselect = _wrap_multiselect(
@@ -247,9 +271,9 @@ def stop_tracking(
         print("Finished script execution. New counts:")
         print(counts)
         print("-" * 80)
-        
-    sess = session_state.get()
-    print(sess.state_dict)
+
+    # sess = session_state.get()
+    # print(sess.state_dict)
 
     # Reset streamlit functions.
     st.button = _orig_button
