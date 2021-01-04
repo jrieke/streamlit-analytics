@@ -13,8 +13,8 @@ from . import session_state
 
 # Dict that holds all analytics results. Note that this is persistent across users,
 # as modules are only imported once by a streamlit app.
-yesterday = datetime.datetime.now().replace(microsecond=0, second=0)
-yesterday = yesterday - datetime.timedelta(minutes=1)
+# Use yesterday as first entry to make chart look better.
+yesterday = str(datetime.date.today() - datetime.timedelta(days=1))
 counts = {
     "total_pageviews": 0,
     "total_script_runs": 0,
@@ -57,7 +57,7 @@ _orig_sidebar_color_picker = st.sidebar.color_picker
 
 def _track_user(sess):
     """Track individual pageviews by storing user id to session state."""
-    today = str(datetime.datetime.now().replace(microsecond=0, second=0))
+    today = str(datetime.date.today())
     if counts["per_day"]["days"][-1] != today:
         # TODO: Insert 0 for all days between today and last entry.
         counts["per_day"]["days"].append(today)
@@ -364,7 +364,7 @@ def stop_tracking(
                 alt.Y(
                     "pageviews:Q",
                     axis=alt.Axis(title="pageviews", titleColor="#5276A7"),
-                    # scale=alt.Scale(domain=(0, df["pageviews"].max() + 1)),
+                    scale=alt.Scale(domain=(0, df["pageviews"].max() + 1)),
                 )
             )
             line2 = base.mark_line(point=True, stroke="#57A44C").encode(
@@ -379,7 +379,8 @@ def stop_tracking(
             st.header("Widget interactions")
             st.markdown(
                 """
-                Note: The numbers only increase if the state of the widget really 
+                Numbers represent user interactions, e.g. how often a button was 
+                clicked. Note that they only increase when the state of the widget
                 changes, not every time streamlit runs the script.
                 """,
                 unsafe_allow_html=True,
