@@ -72,4 +72,16 @@ concurrency if many users access the site at the same time.
 PRs are welcome! If you want to work on any of these things, please open an issue to coordinate. 
 
 - enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
-- persist results after re-starting app
+- persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)
+- track time the user spent in a session and show as "complete time spent on your app"
+- implement A/B testing, e.g. by choosing one option for a new user randomly, storing it 
+  in session object, and then returning the correct bool value for below, and tracking
+  & visualizing stats separately for both options:
+ 
+    ```python
+    if streamlit_analytics.split_test("option a", 2):
+        st.button("Is this button text better?")
+
+    if streamlit_analytics.split_test("option b", 2):
+        st.button("...or this one?")
+    ```
