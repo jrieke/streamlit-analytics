@@ -12,7 +12,6 @@ import streamlit as st
 
 from . import session_state
 from . import display
-from . import wrappers
 
 
 # Dict that holds all analytics results. Note that this is persistent across users,
@@ -29,7 +28,7 @@ counts = {
 # Store original streamlit functions. They will be monkey-patched with some wrappers
 # in `start_tracking` (see wrapper functions below).
 _orig_button = st.button
-# _orig_checkbox = st.checkbox
+_orig_checkbox = st.checkbox
 _orig_radio = st.radio
 _orig_selectbox = st.selectbox
 _orig_multiselect = st.multiselect
@@ -44,7 +43,7 @@ _orig_file_uploader = st.file_uploader
 _orig_color_picker = st.color_picker
 
 _orig_sidebar_button = st.sidebar.button
-# _orig_sidebar_checkbox = st.sidebar.checkbox
+_orig_sidebar_checkbox = st.sidebar.checkbox
 _orig_sidebar_radio = st.sidebar.radio
 _orig_sidebar_selectbox = st.sidebar.selectbox
 _orig_sidebar_multiselect = st.sidebar.multiselect
@@ -57,8 +56,6 @@ _orig_sidebar_date_input = st.sidebar.date_input
 _orig_sidebar_time_input = st.sidebar.time_input
 _orig_sidebar_file_uploader = st.sidebar.file_uploader
 _orig_sidebar_color_picker = st.sidebar.color_picker
-
-active_wrappers = []
 
 
 def _track_user(sess):
@@ -220,16 +217,9 @@ def start_tracking(verbose: bool = False):
     sess = session_state.get(user_tracked=False, state_dict={})
     _track_user(sess)
 
-    active_wrappers.append(
-        wrappers.CheckboxWrapper(st, "checkbox", counts, sess.state_dict).wrap()
-    )
-    active_wrappers.append(
-        wrappers.CheckboxWrapper(st.sidebar, "checkbox", counts, sess.state_dict).wrap()
-    )
-
     # Monkey-patch streamlit to call the wrappers above.
     st.button = _wrap_button(_orig_button, sess.state_dict)
-    # st.checkbox = _wrap_checkbox(_orig_checkbox, sess.state_dict)
+    st.checkbox = _wrap_checkbox(_orig_checkbox, sess.state_dict)
     st.radio = _wrap_select(_orig_radio, sess.state_dict)
     st.selectbox = _wrap_select(_orig_selectbox, sess.state_dict)
     st.multiselect = _wrap_multiselect(_orig_multiselect, sess.state_dict)
@@ -244,7 +234,7 @@ def start_tracking(verbose: bool = False):
     st.color_picker = _wrap_value(_orig_color_picker, sess.state_dict)
 
     st.sidebar.button = _wrap_button(_orig_sidebar_button, sess.state_dict)
-    # st.sidebar.checkbox = _wrap_checkbox(_orig_sidebar_checkbox, sess.state_dict)
+    st.sidebar.checkbox = _wrap_checkbox(_orig_sidebar_checkbox, sess.state_dict)
     st.sidebar.radio = _wrap_select(_orig_sidebar_radio, sess.state_dict)
     st.sidebar.selectbox = _wrap_select(_orig_sidebar_selectbox, sess.state_dict)
     st.sidebar.multiselect = _wrap_multiselect(
@@ -305,13 +295,9 @@ def stop_tracking(
     # sess = session_state.get()
     # print(sess.state_dict)
 
-    for w in active_wrappers:
-        w.unwrap()
-    active_wrappers.clear()
-
     # Reset streamlit functions.
     st.button = _orig_button
-    # st.checkbox = _orig_checkbox
+    st.checkbox = _orig_checkbox
     st.radio = _orig_radio
     st.selectbox = _orig_selectbox
     st.multiselect = _orig_multiselect
@@ -326,7 +312,7 @@ def stop_tracking(
     st.color_picker = _orig_color_picker
 
     st.sidebar.button = _orig_sidebar_button
-    # st.sidebar.checkbox = _orig_sidebar_checkbox
+    st.sidebar.checkbox = _orig_sidebar_checkbox
     st.sidebar.radio = _orig_sidebar_radio
     st.sidebar.selectbox = _orig_sidebar_selectbox
     st.sidebar.multiselect = _orig_sidebar_multiselect
