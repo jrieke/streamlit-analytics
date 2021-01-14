@@ -67,7 +67,7 @@ encryption.
 concurrency if many users access the site at the same time. 
 
 
-## Next steps
+## TODO
 
 PRs are welcome! If you want to work on any of these things, please open an issue to coordinate. 
 
