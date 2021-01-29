@@ -40,8 +40,8 @@ def show_results(counts, reset_callback, unsafe_password=None):
         st.write(f"since {counts['start_time']:%d %b %Y, %H:%M:%S}")
         st.write(
             f"""
-            <sup>pageview = user (re-)loads site; 
-            script run = streamlit re-runs upon changes; 
+            <sup>pageview = user (re-)loads site |
+            script run = streamlit re-runs upon changes |
             time spent = from page load to last widget interaction (summed across users)</sup>
             """,
             unsafe_allow_html=True,
