@@ -27,4 +27,6 @@ with streamlit_analytics.track():
         )
 
     st.write("")
-    st.write("Add `?analytics=on` to the URL to see the analytics dashboard 👀")
+    st.write(
+        "...and now add `?analytics=on` to the URL to see the analytics dashboard 👀"
+    )
