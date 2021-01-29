@@ -21,8 +21,10 @@ yesterday = str(datetime.date.today() - datetime.timedelta(days=1))
 counts = {
     "total_pageviews": 0,
     "total_script_runs": 0,
+    "total_time": datetime.timedelta(),
     "per_day": {"days": [str(yesterday)], "pageviews": [0], "script_runs": [0],},
     "widgets": {},
+    "start_time": datetime.datetime.now(),
 }
 
 # Store original streamlit functions. They will be monkey-patched with some wrappers
@@ -68,6 +70,9 @@ def _track_user(sess):
         counts["per_day"]["script_runs"].append(0)
     counts["total_script_runs"] += 1
     counts["per_day"]["script_runs"][-1] += 1
+    now = datetime.datetime.now()
+    counts["total_time"] += now - sess.last_time
+    sess.last_time = now
     if not sess.user_tracked:
         sess.user_tracked = True
         counts["total_pageviews"] += 1
@@ -214,7 +219,9 @@ def start_tracking(verbose: bool = False):
     `with streamlit_analytics.track():`. 
     """
 
-    sess = session_state.get(user_tracked=False, state_dict={})
+    sess = session_state.get(
+        user_tracked=False, state_dict={}, last_time=datetime.datetime.now(),
+    )
     _track_user(sess)
 
     # Monkey-patch streamlit to call the wrappers above.

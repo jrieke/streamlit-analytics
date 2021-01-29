@@ -5,6 +5,9 @@ Displays the analytics results within streamlit.
 import streamlit as st
 import altair as alt
 import pandas as pd
+import streamlit_metrics as st_metrics
+
+from . import utils
 
 
 def show_results(counts, unsafe_password=None):
@@ -32,16 +35,27 @@ def show_results(counts, unsafe_password=None):
     if show:
         # Show traffic.
         st.header("Traffic")
+        st.write(f"since {counts['start_time']:%d %b %Y, %H:%M:%S}")
         st.write(
             f"""
-            Total: {counts['total_pageviews']} pageviews, {counts['total_script_runs']} script runs
-            <br>
-            <sub>pageview = every time a user goes on the site or reloads; 
-            script run = every time a widget changes and streamlit re-runs the script</sub>
+            <sup>pageview = user (re-)loads site; 
+            script run = streamlit re-runs upon changes; 
+            time spent = from page load to last widget interaction (summed across users)</sup>
             """,
             unsafe_allow_html=True,
         )
+        st_metrics.metric_row(
+            {
+                "Pageviews": counts["total_pageviews"],
+                "Script runs": counts["total_script_runs"],
+                "Time spent": utils.format_timedelta(counts["total_time"]),
+            }
+        )
 
+        # Total: {counts['total_pageviews']} pageviews, {counts['total_script_runs']} script runs
+        # <br>
+
+        # st.header("Traffic per day")
         # Plot altair chart with pageviews and script runs.
         df = pd.DataFrame(counts["per_day"])
         base = alt.Chart(df).encode(
