@@ -51,6 +51,10 @@ your app (see image above).
 `streamlit_analytics.track(unsafe_password=...)`. The streamlit app will then ask you 
 for this password. Do not choose an important password here – it is sent without 
 encryption.
+- You can persist your analytics results to a **Firestore database**. By default, your results get reset if you restart streamlit (e.g. if you deploy). 
+To set up the Firestore database, follow [this blogpost](https://blog.streamlit.io/streamlit-firestore/)
+ and pass the key file and collection name as 
+`streamlit_analytics.track(firebase_key_file="firebase-key.json" firebase_collection_name="counts")`.
 - If you don't want a **huge `with` block**, you can also do:
 
     ```python
@@ -72,7 +76,7 @@ concurrency if many users access the site at the same time.
 PRs are welcome! If you want to work on any of these things, please open an issue to coordinate. 
 
 - [ ] Enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
-- [ ] Persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)
+- [x] Persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)
 - [x] ~~Track time the user spent in a session and show as "complete time spent on your app"~~
 - [ ] Track unique users
 - [ ] Implement A/B testing, e.g. by choosing one option for a new user randomly, storing it 
