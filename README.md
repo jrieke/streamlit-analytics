@@ -9,6 +9,8 @@ framework. With just one line of code, it counts page views, tracks all widget
 interactions across users, and visualizes the results directly in your browser. 
 Think Google Analytics but for streamlit.
 
+<sub>Alpha version, use with care.</sub>
+
 <p align="center">
     <img src="images/example.png" width=600>
 </p>
@@ -65,7 +67,7 @@ To set up the Firestore database, follow [this blogpost](https://blog.streamlit.
     streamlit_analytics.stop_tracking()
     ```
 
-- *Experimental:* You can **store analytics results as a json file** by passing 
+- You can **store analytics results as a json file** by passing 
 `save_to_json="path/to/file.json"` to `streamlit_analytics.track` or 
 `streamlit_analytics.stop_tracking`. At the moment, this may lead to problems with 
 concurrency if many users access the site at the same time. 
@@ -77,6 +79,7 @@ PRs are welcome! If you want to work on any of these things, please open an issu
 
 - [ ] Track unique users (probably requires cookies? but would we need to show a consent form then?)
 - [ ] Enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
+- [ ] Make a demo gif for the readme
 - [x] ~~Persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)~~
 - [ ] Find an easier alternative to Firestore for saving the data
 - [x] ~~Track time the user spent in a session and show as "complete time spent on your app"~~
