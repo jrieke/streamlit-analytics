@@ -66,7 +66,9 @@ your app (see image above).
   ```
 
   The app will then ask for this password before showing any results. Do not choose an
-  important password here, it's not encrypted.
+  important password here, it's not encrypted. If you push your code to Github, you
+  should probably store the password in a `.env` file (which is in `.gitignore`) and
+  load it via [dotenv](https://github.com/theskumar/python-dotenv).
 
 - If you don't want the results to get reset after restarting streamlit (e.g. during
   deployment), you can sync them to a **Firestore database**. Follow
