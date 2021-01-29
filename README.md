@@ -96,6 +96,7 @@ your app (see image above).
 PRs are welcome! If you want to work on any of these things, please open an issue to coordinate.
 
 - [ ] Pass all settings args in start_tracking and not in stop_tracking
+- [ ] Do not track default values for selectbox, text_input etc. This can probably be done easily if I switch to using `on_change`. 
 - [ ] Track unique users -> best way is to use cookies (e.g. with [react-cookies](https://www.npmjs.com/package/react-cookie)) but this probably requires to show a consent form (could also build this in with [react-cookie-consent](https://www.npmjs.com/package/react-cookie-consent))
 - [ ] Enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
 - [ ] Make a demo gif for the readme
@@ -113,5 +114,5 @@ PRs are welcome! If you want to work on any of these things, please open an issu
   ```
 
 - [ ] Enable tracking to Google Analytics, e.g. via custom component with [react-ga](https://github.com/react-ga/react-ga). Widget interactions could also be tracked via [events](https://github.com/react-ga/react-ga#reactgaeventargs).
-- [ ] Add a button to reset analytics results (see issue #2, this should probably show
+- [x] Add a button to reset analytics results (see issue #2, this should probably show
       another prompt for confirmation, similar to if you delete a Github repo)
