@@ -9,7 +9,7 @@ framework. With just one line of code, it counts page views, tracks all widget
 interactions across users, and visualizes the results directly in your browser. 
 Think Google Analytics but for streamlit.
 
-<sub>Alpha version, use with care.</sub>
+<sup>Alpha version, use with care.</sup>
 
 <p align="center">
     <img src="images/example.png" width=600>
