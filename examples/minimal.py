@@ -11,5 +11,5 @@ with streamlit_analytics.track(firestore_key_file="firestore-key.json"):
 
     st.write("")
     st.write(
-        "If there's nothing below, add `?analytics=on` to the URL to see some real action 👀"
+        "If there's nothing below, add `?analytics=on` to the URL to see the analytics dashboard  👀"
     )

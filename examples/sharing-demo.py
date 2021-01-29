@@ -23,4 +23,4 @@ with streamlit_analytics.track():
     st.button("Click me")
 
     st.write("")
-    st.write("If there's nothing below, add `?analytics=on` to the URL to see some real action 👀")
+    st.write("If there's nothing below, add `?analytics=on` to the URL to see the analytics dashboard 👀")
