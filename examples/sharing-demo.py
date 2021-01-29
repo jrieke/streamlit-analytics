@@ -1,13 +1,18 @@
 """This demo is run through Streamlit Sharing."""
 
-# Install streamlit-analytics here because it's not included in requirements.txt.
-import subprocess
-import sys
-
-subprocess.check_call([sys.executable, "-m", "pip", "install", "streamlit_analytics"])
-
 import streamlit as st
-import streamlit_analytics
+
+try:
+    import streamlit_analytics
+except ImportError:
+    # Install streamlit-analytics on first run (not included in requirements.txt).
+    import subprocess
+    import sys
+
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "streamlit_analytics"]
+    )
+    import streamlit_analytics
 
 with streamlit_analytics.track():
     st.text_input("Write something")
