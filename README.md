@@ -73,7 +73,7 @@ PRs are welcome! If you want to work on any of these things, please open an issu
 
 - [ ] Enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
 - [ ] Persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)
-- [x] Track time the user spent in a session and show as "complete time spent on your app"
+- [x] ~~Track time the user spent in a session and show as "complete time spent on your app"~~
 - [ ] Track unique users
 - [ ] Implement A/B testing, e.g. by choosing one option for a new user randomly, storing it 
 in session object, and then returning the correct bool value for below, and tracking
