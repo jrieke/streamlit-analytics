@@ -10,7 +10,7 @@ import streamlit_metrics as st_metrics
 from . import utils
 
 
-def show_results(counts, unsafe_password=None):
+def show_results(counts, reset_callback, unsafe_password=None):
     """Show analytics results in streamlit, asking for password if given."""
 
     # Show header.
@@ -109,4 +109,28 @@ def show_results(counts, unsafe_password=None):
             unsafe_allow_html=True,
         )
         st.write(counts["widgets"])
+
+        # Show button to reset analytics.
+        st.header("Danger zone")
+        with st.beta_expander("Here be dragons 🐲🔥"):
+            st.write(
+                """
+                Here you can reset all analytics results.
+                
+                **This will erase everything tracked so far. You will not be able to 
+                retrieve it. This will also overwrite any results synced to Firestore.**
+                """
+            )
+            reset_prompt = st.selectbox(
+                "Continue?",
+                [
+                    "No idea what I'm doing here",
+                    "I'm absolutely sure that I want to reset the results",
+                ],
+            )
+            if reset_prompt == "I'm absolutely sure that I want to reset the results":
+                reset_clicked = st.button("Click here to reset")
+                if reset_clicked:
+                    reset_callback()
+                    st.write("Done! Please refresh the page.")
 

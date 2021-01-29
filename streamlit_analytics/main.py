@@ -25,17 +25,21 @@ else:
 
 # Dict that holds all analytics results. Note that this is persistent across users,
 # as modules are only imported once by a streamlit app.
-# Use yesterday as first entry to make chart look better.
-yesterday = str(datetime.date.today() - datetime.timedelta(days=1))
-counts = {
-    "total_pageviews": 0,
-    "total_script_runs": 0,
-    "total_time_seconds": 0,
-    "per_day": {"days": [str(yesterday)], "pageviews": [0], "script_runs": [0],},
-    "widgets": {},
-    "start_time": datetime.datetime.now(),
-    "loaded_from_firestore": False,
-}
+counts = {"loaded_from_firestore": False}
+
+
+def reset_counts():
+    # Use yesterday as first entry to make chart look better.
+    yesterday = str(datetime.date.today() - datetime.timedelta(days=1))
+    counts["total_pageviews"] = 0
+    counts["total_script_runs"] = 0
+    counts["total_time_seconds"] = 0
+    counts["per_day"] = {"days": [str(yesterday)], "pageviews": [0], "script_runs": [0]}
+    counts["widgets"] = {}
+    counts["start_time"] = datetime.datetime.now()
+
+
+reset_counts()
 
 # Store original streamlit functions. They will be monkey-patched with some wrappers
 # in `start_tracking` (see wrapper functions below).
@@ -388,7 +392,7 @@ def stop_tracking(
     query_params = st.experimental_get_query_params()
     if "analytics" in query_params and "on" in query_params["analytics"]:
         st.write("---")
-        display.show_results(counts, unsafe_password)
+        display.show_results(counts, reset_counts, unsafe_password)
 
 
 @contextmanager
