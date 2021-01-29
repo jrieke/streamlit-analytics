@@ -12,6 +12,8 @@ import streamlit as st
 
 from . import session_state
 from . import display
+from . import firestore
+from .utils import replace_empty
 
 
 # Dict that holds all analytics results. Note that this is persistent across users,
@@ -21,10 +23,11 @@ yesterday = str(datetime.date.today() - datetime.timedelta(days=1))
 counts = {
     "total_pageviews": 0,
     "total_script_runs": 0,
-    "total_time": datetime.timedelta(),
+    "total_time_seconds": 0,
     "per_day": {"days": [str(yesterday)], "pageviews": [0], "script_runs": [0],},
     "widgets": {},
     "start_time": datetime.datetime.now(),
+    "loaded_from_firestore": False,
 }
 
 # Store original streamlit functions. They will be monkey-patched with some wrappers
@@ -71,7 +74,7 @@ def _track_user(sess):
     counts["total_script_runs"] += 1
     counts["per_day"]["script_runs"][-1] += 1
     now = datetime.datetime.now()
-    counts["total_time"] += now - sess.last_time
+    counts["total_time_seconds"] += (now - sess.last_time).total_seconds()
     sess.last_time = now
     if not sess.user_tracked:
         sess.user_tracked = True
@@ -87,6 +90,7 @@ def _wrap_checkbox(func, state_dict):
 
     def new_func(label, *args, **kwargs):
         checked = func(label, *args, **kwargs)
+        label = replace_empty(label)
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
         if checked != state_dict.get(label, None):
@@ -104,6 +108,7 @@ def _wrap_button(func, state_dict):
 
     def new_func(label, *args, **kwargs):
         clicked = func(label, *args, **kwargs)
+        label = replace_empty(label)
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
         if clicked:
@@ -121,6 +126,7 @@ def _wrap_file_uploader(func, state_dict):
 
     def new_func(label, *args, **kwargs):
         uploaded_file = func(label, *args, **kwargs)
+        label = replace_empty(label)
         if label not in counts["widgets"]:
             counts["widgets"][label] = 0
         # TODO: Right now this doesn't track when multiple files are uploaded one after
@@ -142,16 +148,19 @@ def _wrap_select(func, state_dict):
     """
 
     def new_func(label, options, *args, **kwargs):
-        selected = func(label, options, *args, **kwargs)
+        orig_selected = func(label, options, *args, **kwargs)
+        label = replace_empty(label)
+        selected = replace_empty(orig_selected)
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
         for option in options:
+            option = replace_empty(option)
             if option not in counts["widgets"][label]:
                 counts["widgets"][label][option] = 0
         if selected != state_dict.get(label, None):
             counts["widgets"][label][selected] += 1
         state_dict[label] = selected
-        return selected
+        return orig_selected
 
     return new_func
 
@@ -164,12 +173,15 @@ def _wrap_multiselect(func, state_dict):
 
     def new_func(label, options, *args, **kwargs):
         selected = func(label, options, *args, **kwargs)
+        label = replace_empty(label)
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
         for option in options:
+            option = replace_empty(option)
             if option not in counts["widgets"][label]:
                 counts["widgets"][label][option] = 0
         for sel in selected:
+            sel = replace_empty(sel)
             if sel not in state_dict.get(label, []):
                 counts["widgets"][label][sel] += 1
         state_dict[label] = selected
@@ -191,7 +203,7 @@ def _wrap_value(func, state_dict):
             counts["widgets"][label] = {}
 
         # st.date_input and st.time return datetime object, convert to str
-        formatted_value = value
+        formatted_value = replace_empty(value)
         if (
             isinstance(value, datetime.datetime)
             or isinstance(value, datetime.date)
@@ -209,7 +221,11 @@ def _wrap_value(func, state_dict):
     return new_func
 
 
-def start_tracking(verbose: bool = False):
+def start_tracking(
+    verbose: bool = False,
+    firestore_key_file: str = None,
+    firestore_collection_name: str = "counts",
+):
     """
     Start tracking user inputs to a streamlit app.
     
@@ -218,6 +234,13 @@ def start_tracking(verbose: bool = False):
     For a more convenient interface, wrap your streamlit calls in 
     `with streamlit_analytics.track():`. 
     """
+
+    if firestore_key_file and not counts["loaded_from_firestore"]:
+        firestore.load(counts, firestore_key_file, firestore_collection_name)
+        counts["loaded_from_firestore"] = True
+        print("Loaded count data from firestore:")
+        print(counts)
+        print()
 
     sess = session_state.get(
         user_tracked=False, state_dict={}, last_time=datetime.datetime.now(),
@@ -286,6 +309,8 @@ def start_tracking(verbose: bool = False):
 def stop_tracking(
     unsafe_password: str = None,
     save_to_json: Union[str, Path] = None,
+    firestore_key_file: str = None,
+    firestore_collection_name: str = "counts",
     verbose: bool = False,
 ):
     """
@@ -333,6 +358,15 @@ def stop_tracking(
     st.sidebar.file_uploader = _orig_sidebar_file_uploader
     st.sidebar.color_picker = _orig_sidebar_color_picker
 
+    # Save count data to firestore.
+    # TODO: Maybe don't save on every iteration but on regular intervals in a background 
+    #   thread.
+    if firestore_key_file:
+        print("Saving count data to firestore:")
+        print(counts)
+        print()
+        firestore.save(counts, firestore_key_file, firestore_collection_name)
+
     # Dump the counts to json file if `save_to_json` is set.
     # TODO: Make sure this is not locked if writing from multiple threads.
     if save_to_json is not None:
@@ -350,7 +384,11 @@ def stop_tracking(
 
 @contextmanager
 def track(
-    unsafe_password: str = None, save_to_json: Union[str, Path] = None, verbose=False
+    unsafe_password: str = None,
+    save_to_json: Union[str, Path] = None,
+    firestore_key_file: str = None,
+    firestore_collection_name: str = "counts",
+    verbose=False,
 ):
     """
     Context manager to start and stop tracking user inputs to a streamlit app.
@@ -359,10 +397,19 @@ def track(
     This also shows the analytics results below your app if you attach 
     `?analytics=on` to the URL.
     """
-    start_tracking(verbose=verbose)
+    start_tracking(
+        verbose=verbose,
+        firestore_key_file=firestore_key_file,
+        firestore_collection_name=firestore_collection_name,
+    )
     # Yield here to execute the code in the with statement. This will call the wrappers
     # above, which track all inputs.
     yield
     stop_tracking(
-        unsafe_password=unsafe_password, save_to_json=save_to_json, verbose=verbose
+        unsafe_password=unsafe_password,
+        save_to_json=save_to_json,
+        firestore_key_file=firestore_key_file,
+        firestore_collection_name=firestore_collection_name,
+        verbose=verbose,
     )
+

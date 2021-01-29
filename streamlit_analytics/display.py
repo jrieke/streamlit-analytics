@@ -48,7 +48,7 @@ def show_results(counts, unsafe_password=None):
             {
                 "Pageviews": counts["total_pageviews"],
                 "Script runs": counts["total_script_runs"],
-                "Time spent": utils.format_timedelta(counts["total_time"]),
+                "Time spent": utils.format_seconds(counts["total_time_seconds"]),
             }
         )
 
