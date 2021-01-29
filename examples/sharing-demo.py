@@ -18,9 +18,13 @@ with streamlit_analytics.track():
     st.title(
         "Demo app for [streamlit-analytics](https://github.com/jrieke/streamlit-analytics)"
     )
-    st.text_input("Write a greeting")
-    st.selectbox("Select your favorite", ["Cats", "Dogs", "Flowers"])
-    st.button("Click me")
+    name = st.text_input("Write your name")
+    fav = st.selectbox("Select your favorite", ["cat", "dog", "flower"])
+    clicked = st.button("Click me")
+    if clicked:
+        st.write(
+            f"Hello {name}, here's a {fav} for you: :{fav.replace('flower', 'sunflower')}:"
+        )
 
     st.write("")
-    st.write("If there's nothing below, add `?analytics=on` to the URL to see the analytics dashboard 👀")
+    st.write("Add `?analytics=on` to the URL to see the analytics dashboard 👀")
