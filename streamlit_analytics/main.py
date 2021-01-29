@@ -10,10 +10,17 @@ import datetime
 
 import streamlit as st
 
-from . import session_state
 from . import display
 from . import firestore
 from .utils import replace_empty
+
+
+# Only set this to True if you're using Streamlit's session state beta!!!
+session_state_beta = False
+if session_state_beta:
+    from streamlit import beta_session_state as get_session_state
+else:
+    from .session_state import get as get_session_state
 
 
 # Dict that holds all analytics results. Note that this is persistent across users,
@@ -243,7 +250,7 @@ def start_tracking(
             print(counts)
             print()
 
-    sess = session_state.get(
+    sess = get_session_state(
         user_tracked=False, state_dict={}, last_time=datetime.datetime.now(),
     )
     _track_user(sess)
@@ -325,7 +332,7 @@ def stop_tracking(
         print(counts)
         print("-" * 80)
 
-    # sess = session_state.get()
+    # sess = get_session_state
     # print(sess.state_dict)
 
     # Reset streamlit functions.
@@ -360,7 +367,7 @@ def stop_tracking(
     st.sidebar.color_picker = _orig_sidebar_color_picker
 
     # Save count data to firestore.
-    # TODO: Maybe don't save on every iteration but on regular intervals in a background 
+    # TODO: Maybe don't save on every iteration but on regular intervals in a background
     #   thread.
     if firestore_key_file:
         if verbose:
