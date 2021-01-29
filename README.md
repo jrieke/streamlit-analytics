@@ -16,7 +16,7 @@ Think Google Analytics but for streamlit.
 </h3>
 
 <p align="center">
-    <img src="images/example.png" width=600>
+    <a href="https://share.streamlit.io/jrieke/streamlit-analytics/main/examples/sharing-demo.py?analytics=on"><img src="images/example.png" width=600></a>
 </p>
 
 ## Installation
