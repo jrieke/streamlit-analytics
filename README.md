@@ -11,6 +11,10 @@ Think Google Analytics but for streamlit.
 
 <sup>Alpha version, use with care.</sup>
 
+<h3 align="center">
+  <a href="https://share.streamlit.io/jrieke/streamlit-analytics/main/examples/sharing-demo.py?analytics=on">Live Demo</a>
+</h3>
+
 <p align="center">
     <img src="images/example.png" width=600>
 </p>
