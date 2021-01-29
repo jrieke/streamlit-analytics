@@ -15,6 +15,25 @@ except ImportError:
     import streamlit_analytics
 
 with streamlit_analytics.track():
+    streamlit_analytics.counts["widgets"] = {
+        "Write your name": {
+            " ": 44,
+            "hello": 3,
+            "HIIII its Marisa :) ": 1,
+            "CATS CATS CATS are the wiiiiiiners ahahahahhahahaha ": 1,
+            "What am I supposed to write here?": 1,
+            "hello ": 1,
+            "hello from Abhi": 1,
+            "Never gonna ": 1,
+            "Never gonna give you uuuuuppp !": 1,
+            "Never gonna": 1,
+            "Hey b": 1,
+            "Ah I guess text input is saved when I select my favorite, though I did not press enter in the text_input": 1,
+            "something": 1,
+        },
+        "Click me": 18,
+        "Select your favorite": {"cat": 49, "dog": 5, "flower": 6},
+    }
     st.title(
         "Demo app for [streamlit-analytics](https://github.com/jrieke/streamlit-analytics)"
     )
