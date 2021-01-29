@@ -26,7 +26,9 @@ def show_results(counts, unsafe_password=None):
     # Ask for password if one was given.
     show = True
     if unsafe_password is not None:
-        password_input = st.text_input("Enter password to show results")
+        password_input = st.text_input(
+            "Enter password to show results", type="password"
+        )
         if password_input != unsafe_password:
             show = False
             if len(password_input) > 0:
