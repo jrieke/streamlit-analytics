@@ -16,6 +16,7 @@ except ImportError:
 
 with streamlit_analytics.track():
     st.text_input("Write something")
+    st.selectbox("Select your favorite", ["Cats", "Dogs", "Flowers"])
     st.button("Click me")
 
     st.write("")
