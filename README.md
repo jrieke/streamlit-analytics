@@ -75,10 +75,11 @@ concurrency if many users access the site at the same time.
 
 PRs are welcome! If you want to work on any of these things, please open an issue to coordinate. 
 
+- [ ] Track unique users (probably requires cookies? but would we need to show a consent form then?)
 - [ ] Enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
-- [x] Persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)
+- [x] ~~Persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)~~
+- [ ] Find an easier alternative to Firestore for saving the data
 - [x] ~~Track time the user spent in a session and show as "complete time spent on your app"~~
-- [ ] Track unique users
 - [ ] Implement A/B testing, e.g. by choosing one option for a new user randomly, storing it 
 in session object, and then returning the correct bool value for below, and tracking
 & visualizing stats separately for both options:
