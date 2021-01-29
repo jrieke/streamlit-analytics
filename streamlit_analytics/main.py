@@ -238,9 +238,10 @@ def start_tracking(
     if firestore_key_file and not counts["loaded_from_firestore"]:
         firestore.load(counts, firestore_key_file, firestore_collection_name)
         counts["loaded_from_firestore"] = True
-        print("Loaded count data from firestore:")
-        print(counts)
-        print()
+        if verbose:
+            print("Loaded count data from firestore:")
+            print(counts)
+            print()
 
     sess = session_state.get(
         user_tracked=False, state_dict={}, last_time=datetime.datetime.now(),
@@ -362,9 +363,10 @@ def stop_tracking(
     # TODO: Maybe don't save on every iteration but on regular intervals in a background 
     #   thread.
     if firestore_key_file:
-        print("Saving count data to firestore:")
-        print(counts)
-        print()
+        if verbose:
+            print("Saving count data to firestore:")
+            print(counts)
+            print()
         firestore.save(counts, firestore_key_file, firestore_collection_name)
 
     # Dump the counts to json file if `save_to_json` is set.
