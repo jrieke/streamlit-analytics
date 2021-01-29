@@ -48,7 +48,7 @@ your app (see image above).
 ## More options
 
 - You can **password-protect** your analytics results with 
-`streamlit_analytics.track(unsafe_password=...)`. The streamlit app will then ask you 
+`streamlit_analytics.track(unsafe_password="test123")`. The streamlit app will then ask you 
 for this password. Do not choose an important password here – it is sent without 
 encryption.
 - You can persist your analytics results to a **Firestore database**. By default, your results get reset if you restart streamlit (e.g. if you deploy). 
