@@ -58,13 +58,7 @@ your app (see image above).
 
   ```python
   streamlit_analytics.track(unsafe_password="test123")
-
-  # OR
-
-  streamlit_analytics.start_tracking()
-  # ...
-  streamlit_analytics.stop_tracking(unsafe_password="test123")
-
+  # or pass the same arg to `stop_tracking`
   ```
 
   The app will then ask for this password before showing any results. Do not choose an
@@ -77,24 +71,14 @@ your app (see image above).
 
   ```python
   streamlit_analytics.track(firebase_key_file="firebase-key.json", firebase_collection_name="counts")
-
-  # OR
-
-  streamlit_analytics.start_tracking(firebase_key_file="firebase-key.json", firebase_collection_name="counts")
-  # ...
-  streamlit_analytics.stop_tracking(firebase_key_file="firebase-key.json", firebase_collection_name="counts")
+  # or pass the same args to `start_tracking` AND `stop_tracking`
   ```
 
 - You can **store analytics results as a json file** with:
 
   ```python
   streamlit_analytics.track(save_to_json="path/to/file.json")
-
-  # OR
-
-  streamlit_analytics.start_tracking()
-  # ...
-  streamlit_analytics.stop_tracking(save_to_json="path/to/file.json")
+  # or pass the same arg to `stop_tracking`
   ```
 
   This does NOT persist the data between deployments (use Firestore for this, see
