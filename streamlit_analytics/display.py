@@ -100,8 +100,10 @@ def show_results(counts, reset_callback, unsafe_password=None):
         st.header("Widget interactions")
         st.markdown(
             """
-            Numbers represent user interactions, e.g. how often a button was 
-            clicked, how often a specific text input was given, ...
+            Find out how users interacted with your app!
+            <br>
+            Numbers indicate how often a button was clicked, how often a specific text 
+            input was given, ...
             <br>
             <sub>Note: Numbers only increase if the state of the widget
             changes, not every time streamlit runs the script.</sub>
