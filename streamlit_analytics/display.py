@@ -37,7 +37,7 @@ def show_results(counts, reset_callback, unsafe_password=None):
     if show:
         # Show traffic.
         st.header("Traffic")
-        st.write(f"since {counts['start_time']:%d %b %Y, %H:%M:%S}")
+        st.write(f"since {counts['start_time']}")
         st.write(
             f"""
             <sup>pageview = user (re-)loads site | 

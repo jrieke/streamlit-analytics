@@ -114,5 +114,4 @@ PRs are welcome! If you want to work on any of these things, please open an issu
   ```
 
 - [ ] Enable tracking to Google Analytics, e.g. via custom component with [react-ga](https://github.com/react-ga/react-ga). Widget interactions could also be tracked via [events](https://github.com/react-ga/react-ga#reactgaeventargs).
-- [x] Add a button to reset analytics results (see issue #2, this should probably show
-      another prompt for confirmation, similar to if you delete a Github repo)
+- [x] ~~Add a button to reset analytics results (see issue #2, this should probably show another prompt for confirmation, similar to if you delete a Github repo)~~

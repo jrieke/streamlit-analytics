@@ -36,7 +36,7 @@ def reset_counts():
     counts["total_time_seconds"] = 0
     counts["per_day"] = {"days": [str(yesterday)], "pageviews": [0], "script_runs": [0]}
     counts["widgets"] = {}
-    counts["start_time"] = datetime.datetime.now()
+    counts["start_time"] = datetime.datetime.now().strftime("%d %b %Y, %H:%M:%S")
 
 
 reset_counts()
