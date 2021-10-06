@@ -426,19 +426,12 @@ def track(
     `?analytics=on` to the URL.
     """
 
-    if load_from_json is not None:
-        start_tracking(
-            verbose=verbose,
-            firestore_key_file=firestore_key_file,
-            firestore_collection_name=firestore_collection_name,
-            load_from_json=load_from_json,
-        )
-    else:
-        start_tracking(
-            verbose=verbose,
-            firestore_key_file=firestore_key_file,
-            firestore_collection_name=firestore_collection_name,
-        )
+    start_tracking(
+        verbose=verbose,
+        firestore_key_file=firestore_key_file,
+        firestore_collection_name=firestore_collection_name,
+        load_from_json=load_from_json,
+    )
 
     # Yield here to execute the code in the with statement. This will call the wrappers
     # above, which track all inputs.
