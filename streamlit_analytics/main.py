@@ -178,7 +178,7 @@ def _wrap_select(func, state_dict):
 
 def _wrap_multiselect(func, state_dict):
     """
-    Wrap a streamlit function that returns multiple selected elements out of multiple 
+    Wrap a streamlit function that returns multiple selected elements out of multiple
     options, e.g. st.multiselect.
     """
 
@@ -204,7 +204,7 @@ def _wrap_multiselect(func, state_dict):
 def _wrap_value(func, state_dict):
     """
     Wrap a streamlit function that returns a single value (str/int/float/datetime/...),
-    e.g. st.slider, st.text_input, st.number_input, st.text_area, st.date_input, 
+    e.g. st.slider, st.text_input, st.number_input, st.text_area, st.date_input,
     st.time_input, st.color_picker.
     """
 
@@ -240,11 +240,11 @@ def start_tracking(
 ):
     """
     Start tracking user inputs to a streamlit app.
-    
-    If you call this function directly, you NEED to call 
+
+    If you call this function directly, you NEED to call
     `streamlit_analytics.stop_tracking()` at the end of your streamlit script.
-    For a more convenient interface, wrap your streamlit calls in 
-    `with streamlit_analytics.track():`. 
+    For a more convenient interface, wrap your streamlit calls in
+    `with streamlit_analytics.track():`.
     """
 
     if firestore_key_file and not counts["loaded_from_firestore"]:
@@ -254,7 +254,7 @@ def start_tracking(
             print("Loaded count data from firestore:")
             print(counts)
             print()
-    
+
     if load_from_json is not None:
         with Path(load_from_json).open("r") as f:
             json_counts = json.load(f)
@@ -267,7 +267,9 @@ def start_tracking(
             print()
 
     sess = get_session_state(
-        user_tracked=False, state_dict={}, last_time=datetime.datetime.now(),
+        user_tracked=False,
+        state_dict={},
+        last_time=datetime.datetime.now(),
     )
     _track_user(sess)
 
@@ -339,7 +341,7 @@ def stop_tracking(
 ):
     """
     Stop tracking user inputs to a streamlit app.
-    
+
     Should be called after `streamlit-analytics.start_tracking()`. This method also
     shows the analytics results below your app if you attach `?analytics=on` to the URL.
     """
@@ -418,9 +420,9 @@ def track(
 ):
     """
     Context manager to start and stop tracking user inputs to a streamlit app.
-    
-    To use this, wrap all calls to streamlit in `with streamlit_analytics.track():`. 
-    This also shows the analytics results below your app if you attach 
+
+    To use this, wrap all calls to streamlit in `with streamlit_analytics.track():`.
+    This also shows the analytics results below your app if you attach
     `?analytics=on` to the URL.
     """
 
@@ -448,4 +450,3 @@ def track(
         firestore_collection_name=firestore_collection_name,
         verbose=verbose,
     )
-
