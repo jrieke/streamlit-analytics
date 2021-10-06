@@ -413,10 +413,10 @@ def stop_tracking(
 def track(
     unsafe_password: str = None,
     save_to_json: Union[str, Path] = None,
-    load_from_json: Union[str, Path] = None,
     firestore_key_file: str = None,
     firestore_collection_name: str = "counts",
     verbose=False,
+    load_from_json: Union[str, Path] = None,
 ):
     """
     Context manager to start and stop tracking user inputs to a streamlit app.
