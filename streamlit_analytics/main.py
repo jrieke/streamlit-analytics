@@ -236,6 +236,7 @@ def start_tracking(
     verbose: bool = False,
     firestore_key_file: str = None,
     firestore_collection_name: str = "counts",
+    load_from_json: Union[str, Path] = None,
 ):
     """
     Start tracking user inputs to a streamlit app.
@@ -251,6 +252,17 @@ def start_tracking(
         counts["loaded_from_firestore"] = True
         if verbose:
             print("Loaded count data from firestore:")
+            print(counts)
+            print()
+    
+    if load_from_json is not None:
+        with Path(load_from_json).open("r") as f:
+            json_counts = json.load(f)
+            for key in json_counts:
+                if key in counts:
+                    counts[key] = json_counts[key]
+        if verbose:
+            print(f"Loaded count data from json ({load_from_json}):")
             print(counts)
             print()
 
@@ -399,6 +411,7 @@ def stop_tracking(
 def track(
     unsafe_password: str = None,
     save_to_json: Union[str, Path] = None,
+    load_from_json: Union[str, Path] = None,
     firestore_key_file: str = None,
     firestore_collection_name: str = "counts",
     verbose=False,
@@ -410,11 +423,21 @@ def track(
     This also shows the analytics results below your app if you attach 
     `?analytics=on` to the URL.
     """
-    start_tracking(
-        verbose=verbose,
-        firestore_key_file=firestore_key_file,
-        firestore_collection_name=firestore_collection_name,
-    )
+
+    if load_from_json is not None:
+        start_tracking(
+            verbose=verbose,
+            firestore_key_file=firestore_key_file,
+            firestore_collection_name=firestore_collection_name,
+            load_from_json=load_from_json,
+        )
+    else:
+        start_tracking(
+            verbose=verbose,
+            firestore_key_file=firestore_key_file,
+            firestore_collection_name=firestore_collection_name,
+        )
+
     # Yield here to execute the code in the with statement. This will call the wrappers
     # above, which track all inputs.
     yield
