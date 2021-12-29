@@ -80,7 +80,7 @@ your app (see image above).
   and pass the key file and collection name:
 
   ```python
-  streamlit_analytics.track(firebase_key_file="firebase-key.json", firebase_collection_name="counts")
+  streamlit_analytics.track(firestore_key_file="firebase-key.json", firestore_collection_name="counts")
   # or pass the same args to `start_tracking` AND `stop_tracking`
   ```
 
