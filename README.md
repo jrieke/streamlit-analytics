@@ -91,9 +91,20 @@ your app (see image above).
   # or pass the same arg to `stop_tracking`
   ```
 
-  This does NOT persist the data between deployments (use Firestore for this, see
-  above). This may also lead to problems with concurrency if many users access the site
-  at the same time.
+  And load with:
+
+  ```python
+  streamlit_analytics.track(load_from_json="path/to/file.json")
+  # or pass the same arg to `stop_tracking`
+  ```
+
+  (Thanks to @Uranium2 for implementing loading!)
+
+  You can also combine both args to persist data to a json file. Note that this 
+  file might get deleted when doing a fresh deploy on a cloud service. Use Firestore
+  instead for persistence, see above. Also note that `load_from_json` will fail silently
+  if the JSON file does not exist. Writing to JSON may lead to problems with concurrency 
+  if many users access the site at the same time.
 
 ## TODO
 

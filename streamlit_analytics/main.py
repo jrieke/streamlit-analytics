@@ -178,7 +178,7 @@ def _wrap_select(func, state_dict):
 
 def _wrap_multiselect(func, state_dict):
     """
-    Wrap a streamlit function that returns multiple selected elements out of multiple 
+    Wrap a streamlit function that returns multiple selected elements out of multiple
     options, e.g. st.multiselect.
     """
 
@@ -204,7 +204,7 @@ def _wrap_multiselect(func, state_dict):
 def _wrap_value(func, state_dict):
     """
     Wrap a streamlit function that returns a single value (str/int/float/datetime/...),
-    e.g. st.slider, st.text_input, st.number_input, st.text_area, st.date_input, 
+    e.g. st.slider, st.text_input, st.number_input, st.text_area, st.date_input,
     st.time_input, st.color_picker.
     """
 
@@ -236,14 +236,15 @@ def start_tracking(
     verbose: bool = False,
     firestore_key_file: str = None,
     firestore_collection_name: str = "counts",
+    load_from_json: Union[str, Path] = None,
 ):
     """
     Start tracking user inputs to a streamlit app.
-    
-    If you call this function directly, you NEED to call 
+
+    If you call this function directly, you NEED to call
     `streamlit_analytics.stop_tracking()` at the end of your streamlit script.
-    For a more convenient interface, wrap your streamlit calls in 
-    `with streamlit_analytics.track():`. 
+    For a more convenient interface, wrap your streamlit calls in
+    `with streamlit_analytics.track():`.
     """
 
     if firestore_key_file and not counts["loaded_from_firestore"]:
@@ -254,8 +255,27 @@ def start_tracking(
             print(counts)
             print()
 
+    if load_from_json is not None:
+        if verbose:
+            print(f"Loading counts from json:", load_from_json)
+        try:
+            with Path(load_from_json).open("r") as f:
+                json_counts = json.load(f)
+                for key in json_counts:
+                    if key in counts:
+                        counts[key] = json_counts[key]
+            if verbose:
+                print("Success! Loaded counts:")
+                print(counts)
+                print()
+        except FileNotFoundError as e:
+            if verbose:
+                print(f"File not found, proceeding with empty counts.")
+
     sess = get_session_state(
-        user_tracked=False, state_dict={}, last_time=datetime.datetime.now(),
+        user_tracked=False,
+        state_dict={},
+        last_time=datetime.datetime.now(),
     )
     _track_user(sess)
 
@@ -327,7 +347,7 @@ def stop_tracking(
 ):
     """
     Stop tracking user inputs to a streamlit app.
-    
+
     Should be called after `streamlit-analytics.start_tracking()`. This method also
     shows the analytics results below your app if you attach `?analytics=on` to the URL.
     """
@@ -402,19 +422,23 @@ def track(
     firestore_key_file: str = None,
     firestore_collection_name: str = "counts",
     verbose=False,
+    load_from_json: Union[str, Path] = None,
 ):
     """
     Context manager to start and stop tracking user inputs to a streamlit app.
-    
-    To use this, wrap all calls to streamlit in `with streamlit_analytics.track():`. 
-    This also shows the analytics results below your app if you attach 
+
+    To use this, wrap all calls to streamlit in `with streamlit_analytics.track():`.
+    This also shows the analytics results below your app if you attach
     `?analytics=on` to the URL.
     """
+
     start_tracking(
         verbose=verbose,
         firestore_key_file=firestore_key_file,
         firestore_collection_name=firestore_collection_name,
+        load_from_json=load_from_json,
     )
+
     # Yield here to execute the code in the with statement. This will call the wrappers
     # above, which track all inputs.
     yield
@@ -425,4 +449,3 @@ def track(
         firestore_collection_name=firestore_collection_name,
         verbose=verbose,
     )
-
