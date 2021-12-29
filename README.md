@@ -95,7 +95,7 @@ your app (see image above).
 
   ```python
   streamlit_analytics.track(load_from_json="path/to/file.json")
-  # or pass the same arg to `stop_tracking`
+  # or pass the same arg to `start_tracking`
   ```
 
   (Thanks to @Uranium2 for implementing loading!)
