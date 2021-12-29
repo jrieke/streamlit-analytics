@@ -135,4 +135,3 @@ def show_results(counts, reset_callback, unsafe_password=None):
                 if reset_clicked:
                     reset_callback()
                     st.write("Done! Please refresh the page.")
-
