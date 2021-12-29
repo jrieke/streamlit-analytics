@@ -213,8 +213,12 @@ def _wrap_value(func, state_dict):
         if label not in counts["widgets"]:
             counts["widgets"][label] = {}
 
-        # st.date_input and st.time return datetime object, convert to str
         formatted_value = replace_empty(value)
+        if type(value) == tuple and len(value) == 2:
+            # Double-ended slider or date input with start/end, convert to str.
+            formatted_value = f"{value[0]} - {value[1]}"
+            
+        # st.date_input and st.time return datetime object, convert to str
         if (
             isinstance(value, datetime.datetime)
             or isinstance(value, datetime.date)

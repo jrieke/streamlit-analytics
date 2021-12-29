@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit_analytics
 from datetime import datetime
 
-with streamlit_analytics.track():
+with streamlit_analytics.track(verbose=True):
     st.title("Test app with all widgets")
     st.checkbox("checkbox")
     st.button("button")
@@ -10,6 +10,7 @@ with streamlit_analytics.track():
     st.selectbox("selectbox", ("option 1", "option 2", "option 3"))
     st.multiselect("multiselect", ("option 1", "option 2"))
     st.slider("slider")
+    st.slider("double-ended slider", value=[0, 100])
     st.select_slider("select_slider", ("option 1", "option 2"))
     st.text_input("text_input")
     st.number_input("number_input")
@@ -25,6 +26,7 @@ with streamlit_analytics.track():
     st.sidebar.selectbox("sidebar_selectbox", ("option 1", "option 2", "option 3"))
     st.sidebar.multiselect("sidebar_multiselect", ("option 1", "option 2"))
     st.sidebar.slider("sidebar_slider")
+    st.sidebar.slider("sidebar_double-ended slider", value=[0, 100])
     st.sidebar.select_slider("sidebar_select_slider", ("option 1", "option 2"))
     st.sidebar.text_input("sidebar_text_input")
     st.sidebar.number_input("sidebar_number_input")
