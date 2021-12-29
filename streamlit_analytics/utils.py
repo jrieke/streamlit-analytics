@@ -24,8 +24,8 @@ def format_seconds(s: int) -> str:
 
 
 def replace_empty(s):
-    """Replace an empty string with a space."""
-    if s == "":
+    """Replace an empty string or None with a space."""
+    if s == "" or s is None:
         return " "
     else:
         return s
