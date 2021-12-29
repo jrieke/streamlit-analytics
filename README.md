@@ -91,12 +91,14 @@ your app (see image above).
   # or pass the same arg to `stop_tracking`
   ```
 
-  And load it with:
+  And load with:
 
   ```python
   streamlit_analytics.track(load_from_json="path/to/file.json")
   # or pass the same arg to `stop_tracking`
   ```
+
+  (Thanks to @Uranium2 for implementing loading!)
 
   You can also combine both args to persist data to a json file. Note that this 
   file might get deleted when doing a fresh deploy on a cloud service. Use Firestore
