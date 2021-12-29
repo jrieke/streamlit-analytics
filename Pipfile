@@ -12,6 +12,10 @@ google-cloud-firestore = "==2.0.2"
 streamlit-analytics = {editable = true, path = "."}
 
 [dev-packages]
+black = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
