@@ -256,15 +256,21 @@ def start_tracking(
             print()
 
     if load_from_json is not None:
-        with Path(load_from_json).open("r") as f:
-            json_counts = json.load(f)
-            for key in json_counts:
-                if key in counts:
-                    counts[key] = json_counts[key]
         if verbose:
-            print(f"Loaded count data from json ({load_from_json}):")
-            print(counts)
-            print()
+            print(f"Loading counts from json:", load_from_json)
+        try:
+            with Path(load_from_json).open("r") as f:
+                json_counts = json.load(f)
+                for key in json_counts:
+                    if key in counts:
+                        counts[key] = json_counts[key]
+            if verbose:
+                print("Success! Loaded counts:")
+                print(counts)
+                print()
+        except FileNotFoundError as e:
+            if verbose:
+                print(f"File not found, proceeding with empty counts.")
 
     sess = get_session_state(
         user_tracked=False,
