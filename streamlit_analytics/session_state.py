@@ -27,7 +27,7 @@ except Exception:
     try: # Fix for Streamlit >= 1.4
         import streamlit.report_thread as ReportThread
     except Exception:
-        from streamlit.script_run_context import get_script_run_ctx
+        from streamlit.scriptrunner.script_run_context import get_script_run_ctx
     
     from streamlit.server.server import Server
 
