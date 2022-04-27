@@ -100,16 +100,24 @@ def get(**kwargs):
             (hasattr(s, "_main_dg") and s._main_dg == ctx.main_dg)
             or
             # Streamlit >= 0.54.0
-            (not hasattr(s, "_main_dg") and hasattr(s, "enqueue") and s.enqueue == ctx.enqueue)
+            (
+                not hasattr(s, "_main_dg")
+                and hasattr(s, "enqueue")
+                and s.enqueue == ctx.enqueue
+            )
             or
             # Streamlit >= 0.65.2
-            (not hasattr(s, "_main_dg") and s._uploaded_file_mgr == ctx.uploaded_file_mgr)
+            (
+                not hasattr(s, "_main_dg")
+                and s._uploaded_file_mgr == ctx.uploaded_file_mgr
+            )
         ):
             this_session = s
 
     if this_session is None:
         raise RuntimeError(
-            "Oh noes. Couldn't get your Streamlit Session object. " "Are you doing something fancy with threads?"
+            "Oh noes. Couldn't get your Streamlit Session object. "
+            "Are you doing something fancy with threads?"
         )
 
     # Got the session object! Now let's attach some state into it.
