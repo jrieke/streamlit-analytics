@@ -45,8 +45,8 @@ you can also use [any other streamlit widget](https://docs.streamlit.io/en/stabl
 in the `with` block (both from `st.` and `st.sidebar.`).
 
 <sub>Note: One thing that doesn't work (yet) is tracking widgets created directly from
-containers, expanders, or columns (e.g. `st.beta_expander().button("foo")`). Instead,
-please use a with statement, e.g. `with st.beta_expander(): st.button("foo")`.</sub>
+containers, expanders, or columns (e.g. `st.expander().button("foo")`). Instead,
+please use a with statement, e.g. `with st.expander(): st.button("foo")`.</sub>
 
 To view the results, open your app like normal and append `?analytics=on` to the URL
 (e.g. http://localhost:8501/?analytics=on). The results are then shown directly below
@@ -113,7 +113,7 @@ PRs are welcome! If you want to work on any of these things, please open an issu
 - [ ] Pass all settings args in start_tracking and not in stop_tracking
 - [ ] Do not track default values for selectbox, text_input etc. This can probably be done easily if I switch to using `on_change`. 
 - [ ] Track unique users -> best way is to use cookies (e.g. with [react-cookies](https://www.npmjs.com/package/react-cookie)) but this probably requires to show a consent form (could also build this in with [react-cookie-consent](https://www.npmjs.com/package/react-cookie-consent))
-- [ ] Enable tracking on widgets created directly from beta_container, beta_expander, beta_columns
+- [ ] Enable tracking on widgets created directly from container, expander, columns
 - [ ] Make a demo gif for the readme
 - [x] ~~Persist results after re-starting app (e.g. database or file, but where should this be saved/hosted)~~
 - [ ] Find an easier alternative to Firestore for saving the data
