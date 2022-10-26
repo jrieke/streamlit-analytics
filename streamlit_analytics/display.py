@@ -38,9 +38,21 @@ def show_results(counts, reset_callback, unsafe_password=None):
         st.header("Traffic")
         st.write(f"since {counts['start_time']}")
         col1, col2, col3 = st.columns(3)
-        col1.metric("Pageviews", counts["total_pageviews"], help="Every time a user (re-)loads the site.")
-        col2.metric("Script runs", counts["total_script_runs"], help="Every time Streamlit reruns upon changes or interactions.")
-        col3.metric("Time spent", utils.format_seconds(counts["total_time_seconds"]), help="Time from initial page load to last widget interaction, summed over all users.")
+        col1.metric(
+            "Pageviews",
+            counts["total_pageviews"],
+            help="Every time a user (re-)loads the site.",
+        )
+        col2.metric(
+            "Script runs",
+            counts["total_script_runs"],
+            help="Every time Streamlit reruns upon changes or interactions.",
+        )
+        col3.metric(
+            "Time spent",
+            utils.format_seconds(counts["total_time_seconds"]),
+            help="Time from initial page load to last widget interaction, summed over all users.",
+        )
         st.write("")
 
         # Plot altair chart with pageviews and script runs.
