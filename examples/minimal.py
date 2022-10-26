@@ -6,3 +6,4 @@ with streamlit_analytics.track():
     st.selectbox("Select your favorite", ["cat", "dog", "flower"])
     st.button("Click me")
 
+st.title("A [link]()")

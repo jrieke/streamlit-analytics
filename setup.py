@@ -1,6 +1,7 @@
-from pathlib import Path
 import re
-from setuptools import setup, find_packages
+from pathlib import Path
+
+from setuptools import find_packages, setup
 
 here = Path(__file__).resolve().parent
 
@@ -26,7 +27,7 @@ setup(
     packages=find_packages(exclude=("tests", "docs", "examples")),
     include_package_data=True,
     install_requires=[
-        "streamlit",
+        "streamlit >= 0.84.0",
         "pandas",
         "altair",
         "google-cloud-firestore",
