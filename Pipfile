@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 streamlit = "*"
 altair = "*"
-streamlit-metrics = "*"
 pandas = "*"
 google-cloud-firestore = "*"
 streamlit-analytics = {editable = true, path = "."}
