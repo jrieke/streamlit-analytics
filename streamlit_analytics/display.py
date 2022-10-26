@@ -114,7 +114,7 @@ def show_results(counts, reset_callback, unsafe_password=None):
 
         # Show button to reset analytics.
         st.header("Danger zone")
-        with st.beta_expander("Here be dragons 🐲🔥"):
+        with st.expander("Here be dragons 🐲🔥"):
             st.write(
                 """
                 Here you can reset all analytics results.
