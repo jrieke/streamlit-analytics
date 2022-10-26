@@ -29,7 +29,6 @@ setup(
         "streamlit",
         "pandas",
         "altair",
-        "streamlit_metrics",
         "google-cloud-firestore",
     ],
     classifiers=[
