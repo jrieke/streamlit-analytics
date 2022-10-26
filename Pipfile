@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-streamlit = "==0.73.1"
-altair = "==4.1.0"
-streamlit-metrics = "==0.1.0"
-pandas = "==1.1.3"
-google-cloud-firestore = "==2.0.2"
+streamlit = "*"
+altair = "*"
+streamlit-metrics = "*"
+pandas = "*"
+google-cloud-firestore = "*"
 streamlit-analytics = {editable = true, path = "."}
 
 [dev-packages]
@@ -17,5 +17,3 @@ black = "*"
 [requires]
 python_version = "3.8"
 
-[pipenv]
-allow_prereleases = true
