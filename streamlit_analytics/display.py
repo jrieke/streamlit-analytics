@@ -5,7 +5,6 @@ Displays the analytics results within streamlit.
 import altair as alt
 import pandas as pd
 import streamlit as st
-import streamlit_metrics as st_metrics
 
 from . import utils
 
