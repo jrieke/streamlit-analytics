@@ -111,7 +111,7 @@ your app (see image above).
   ```
 2. Add this to the top of your file
   ```python
-  with streamlit_analytics.track(firestore_collection_name="data", streamlit_secrets_firestore_key="firebase", firestore_project_name=firestore_project_name):
+  with streamlit_analytics.track(firestore_collection_name="counts", streamlit_secrets_firestore_key="firebase", firestore_project_name=firestore_project_name):
   # or pass the same args to `start_tracking` AND `stop_tracking`
   ```
 **Full Example**
@@ -119,7 +119,7 @@ your app (see image above).
   import streamlit as st
   import streamlit_analytics
 
-  with streamlit_analytics.track(firestore_collection_name="data", streamlit_secrets_firestore_key="firebase", firestore_project_name=firestore_project_name):
+  with streamlit_analytics.track(firestore_collection_name="counts", streamlit_secrets_firestore_key="firebase", firestore_project_name=firestore_project_name):
       st.text_input("Write something")
       st.button("Click me")
   ```

@@ -13,12 +13,11 @@ def load(counts, service_account_json, collection_name, streamlit_secrets_firest
         db = firestore.Client(
             credentials=creds, project=firestore_project_name)
         col = db.collection(collection_name)
-        # Change back to "counts"
-        firestore_counts = col.document("data").get().to_dict()
+        firestore_counts = col.document("counts").get().to_dict()
     else:
         db = firestore.Client.from_service_account_json(service_account_json)
         col = db.collection(collection_name)
-        firestore_counts = col.document("data").get().to_dict()
+        firestore_counts = col.document("counts").get().to_dict()
 
     # Update all fields in counts that appear in both counts and firestore_counts.
     if firestore_counts is not None:
@@ -39,6 +38,5 @@ def save(counts, service_account_json, collection_name, streamlit_secrets_firest
     else:
         db = firestore.Client.from_service_account_json(service_account_json)
     col = db.collection(collection_name)
-    # Change back to "counts"
-    doc = col.document("data")
+    doc = col.document("counts")
     doc.set(counts)  # creates if doesn't exist

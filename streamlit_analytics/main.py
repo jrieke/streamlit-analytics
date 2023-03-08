@@ -232,8 +232,7 @@ def _wrap_value(func):
 def start_tracking(
     verbose: bool = False,
     firestore_key_file: str = None,
-    # Change to "counts"
-    firestore_collection_name: str = "data",
+    firestore_collection_name: str = "counts",
     load_from_json: Union[str, Path] = None,
     streamlit_secrets_firestore_key: str = None,
     firestore_project_name: str = None
@@ -347,8 +346,7 @@ def stop_tracking(
     unsafe_password: str = None,
     save_to_json: Union[str, Path] = None,
     firestore_key_file: str = None,
-    # Change to "counts"
-    firestore_collection_name: str = "data",
+    firestore_collection_name: str = "counts",
     verbose: bool = False,
     streamlit_secrets_firestore_key: str = None,
     firestore_project_name: str = None
@@ -436,7 +434,7 @@ def track(
     unsafe_password: str = None,
     save_to_json: Union[str, Path] = None,
     firestore_key_file: str = None,
-    firestore_collection_name: str = "data",
+    firestore_collection_name: str = "counts",
     verbose=False,
     load_from_json: Union[str, Path] = None,
     streamlit_secrets_firestore_key: str = None,
