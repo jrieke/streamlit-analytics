@@ -1,3 +1,6 @@
+# Streamlit
+.streamlit/secrets.toml
+
 firestore-key.json
 results.json
 .vscode

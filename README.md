@@ -84,6 +84,46 @@ your app (see image above).
   # or pass the same args to `start_tracking` AND `stop_tracking`
   ```
 
+- If you don't want to push your `firebase-key.json` to GitHub, you can do the following to securely deploy on Streamlit Cloud, or your own hosting solution.
+
+1. Run this code to create the streamlit secrets directory and add your firebase key to `.streamlit/secrets.toml`. (Replace `path_to_firebase_key.json` with your path)
+
+  ```python
+  import toml
+  import os
+
+  # Create streamlit secrets directory and secrets.toml if it doesn't exist
+  if not os.path.exists("./.streamlit"):
+    os.mkdir("./.streamlit")
+    f = open("./.streamlit/secrets.toml", "x")
+    f.close()
+
+  output_file = ".streamlit/secrets.toml"
+
+  with open(path_to_firebase_key.json) as json_file:
+      json_text = json_file.read()
+
+  config = {"firebase": json_text}
+  toml_config = toml.dumps(config)
+
+  with open(output_file, "w") as target:
+      target.write(toml_config)
+  ```
+2. Add this to the top of your file
+  ```python
+  with streamlit_analytics.track(firestore_collection_name="data", streamlit_secrets_firestore_key="firebase", firestore_project_name=firestore_project_name):
+  # or pass the same args to `start_tracking` AND `stop_tracking`
+  ```
+**Full Example**
+  ```python
+  import streamlit as st
+  import streamlit_analytics
+
+  with streamlit_analytics.track(firestore_collection_name="data", streamlit_secrets_firestore_key="firebase", firestore_project_name=firestore_project_name):
+      st.text_input("Write something")
+      st.button("Click me")
+  ```
+
 - You can **store analytics results as a json file** with:
 
   ```python
