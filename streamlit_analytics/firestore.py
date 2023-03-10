@@ -34,9 +34,14 @@ def save(counts, service_account_json, collection_name, streamlit_secrets_firest
         creds = service_account.Credentials.from_service_account_info(key_dict)
         db = firestore.Client(
             credentials=creds, project=firestore_project_name)
-        col = db.collection(collection_name)
     else:
         db = firestore.Client.from_service_account_json(service_account_json)
+
     col = db.collection(collection_name)
     doc = col.document("counts")
+    # Make sure the keys of nested dictionaries are str type
+    for subdict in counts["widgets"]:
+        if type(counts["widgets"][subdict]) == dict:
+            counts["widgets"][subdict] = {
+                str(k): v for k, v in counts["widgets"][subdict].items()}
     doc.set(counts)  # creates if doesn't exist
