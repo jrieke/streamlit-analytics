@@ -20,11 +20,11 @@ counts = {"loaded_from_firestore": False}
 
 def reset_counts():
     # Use yesterday as first entry to make chart look better.
-    yesterday = str(datetime.date.today() - datetime.timedelta(days=1))
+    today = datetime.date.today()
     counts["total_pageviews"] = 0
     counts["total_script_runs"] = 0
     counts["total_time_seconds"] = 0
-    counts["per_day"] = {"days": [str(yesterday)], "pageviews": [0], "script_runs": [0]}
+    counts["per_day"] = {"days": [str(today)], "pageviews": [0], "script_runs": [0]}
     counts["widgets"] = {}
     counts["start_time"] = datetime.datetime.now().strftime("%d %b %Y, %H:%M:%S")
 
