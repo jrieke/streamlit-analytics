@@ -62,8 +62,9 @@ def show_results(counts, reset_callback, unsafe_password=None):
             pass  # probably old Streamlit version
 
         df = pd.DataFrame(counts["per_day"])
+        # Formatting date by ISO-8601 to fix altair's date parsing bug 
         df["days"] = df["days"] + "T00:00:00"
-        
+
         base = alt.Chart(df).encode(
             x=alt.X("monthdate(days):O", axis=alt.Axis(title="", grid=True))
         )
