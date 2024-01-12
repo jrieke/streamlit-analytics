@@ -708,7 +708,7 @@
                 "sha256:eb178dc87d9f01e2be11ee9e4d55f79a678597ece56cacbfe5a9236d768d48da"
             ],
             "index": "pypi",
-            "version": "==1.13.0"
+            "version": "==1.30.0"
         },
         "streamlit-analytics": {
             "editable": true,
