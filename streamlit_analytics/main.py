@@ -399,7 +399,7 @@ def stop_tracking(
             print("Storing results to file:", save_to_json)
 
     # Show analytics results in the streamlit app if `?analytics=on` is set in the URL.
-    query_params = st.experimental_get_query_params()
+    query_params = st.query_params()
     if "analytics" in query_params and "on" in query_params["analytics"]:
         st.write("---")
         display.show_results(counts, reset_counts, unsafe_password)
