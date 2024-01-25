@@ -1,8 +1,11 @@
 # streamlit-analytics &nbsp;👀
 
-[![PyPi](https://img.shields.io/pypi/v/streamlit-analytics)](https://pypi.org/project/streamlit-analytics/)
+<!-- [![PyPi](https://img.shields.io/pypi/v/streamlit-analytics)](https://pypi.org/project/streamlit-analytics/) -->
 
 **Track & visualize user interactions with your streamlit app.**
+
+# Please note this is a temporary fork of the [original repo](https://github.com/jrieke/streamlit-analytics/)
+## I am trying to contact the original maintainer to help in the project and get some [issues](https://github.com/jrieke/streamlit-analytics/issues) resolved.
 
 This is a small extension for the fantastic [streamlit](https://www.streamlit.io/)
 framework. With just one line of code, it counts page views, tracks all widget
