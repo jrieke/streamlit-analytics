@@ -1,3 +1,4 @@
+
 # Contributing to Streamlit-Analytics
 
 We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
@@ -14,7 +15,7 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 
 ## We Use GitHub Flow
 
-All code changes happen through pull requests, so we suggest you familiarize yourself with [GitHub Flow](https://guides.github.com/introduction/flow/). Pull requests are the best way to propose changes to the codebase (we use [GitHub Flow](https://guides.github.com/introduction/flow/)). We actively welcome your pull requests:
+All code changes happen through pull requests, so we suggest you familiarize yourself with [GitHub Flow](https://guides.github.com/introduction/flow/). Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
 
 1. Fork the repo and create your branch from `main`.
 2. Make sure your code lints.
@@ -40,58 +41,61 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 
 ## Use a Consistent Coding Style
 
-TO BE DETERMINED
+- We follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide for Python code.
+- Ensure your code passes flake8 linting:
+  ```sh
+  pipenv run flake8
+  ```
+- Format your code with Black:
+  ```sh
+  pipenv run black .
+  ```
 
 ## License
 
 By contributing, you agree that your contributions will be licensed under its [License](LICENSE.md).
 
-## Guide to setting up a testing/dev environment
-1. navigate to the directory you want to clone the repo into
-```
-cd path_to_your_project_location
-```
+## Guide to Setting Up a Testing/Dev Environment
 
-2. clone the repo
-```
-git clone https://github.com/jrieke/streamlit-analytics.git
-```
+1. Navigate to the directory you want to clone the repo into:
+    ```sh
+    cd path/to/your/project/location
+    ```
 
-3. navigate into the repo
-```
-cd streamlit-analytics
-```
+2. Clone the repo:
+    ```sh
+    git clone https://github.com/jrieke/streamlit-analytics.git
+    ```
 
-4. create a new branch
-```
-git checkout -b name_of_your_new_branch
-```
+3. Navigate into the repo:
+    ```sh
+    cd streamlit-analytics
+    ```
 
-5. create a venv
-```
-python3 -m venv env
-```
+4. Create a new branch:
+    ```sh
+    git checkout -b name_of_your_new_branch
+    ```
 
-6. activate the virtual environment
-```
-Linux: source env/bin/activate
-Windows: env\Scripts\activate
-```
-Note: make sure to restart any terminals and make sure the word (env) is in front of the terminal prompt
+5. Ensure you have Python 3.8.x and pipenv installed on your system. If not, you can install pipenv using pip:
+    ```sh
+    pip install pipenv
+    ```
 
-7. install the requirements
-```
-pip install -r examples/requirements.txt
-```
+6. Install project dependencies using pipenv. This step will create a virtual environment specific to this project and install all required dependencies within it:
+    ```sh
+    pipenv install --dev
+    ```
+    This command installs all regular and development dependencies needed for the project. The `--dev` flag ensures that tools required for development, such as linters and testing frameworks, are also installed.
 
-8. run the minimal.py file
-```
-streamlit run examples/minimal.py
-```
+7. Activate the pipenv virtual environment to start working on the project:
+    ```sh
+    pipenv shell
+    ```
+    This command activates the virtual environment. You need to do this before running any project-related commands to ensure they use the correct Python and dependencies versions.
 
---- 
-At this point you should see a basic streamlit app and can begin testing and changes you may wish to contrubute in a PR 
-
-Please note that to accurately test any changes, you need to take into account that the streamlit-analytics package is in your main directory but it is also loaded as a module by pip and when you run streamlit it is using the pip version of streamlit analytics files and NOT the main files you are editing.
-
-Therefore, you will need to test the desired changes by making changes to the env/Lib/streamlit-analytics files *first* to understand what changes are being made.
+8. Run the minimal example file:
+    ```sh
+    streamlit run examples/minimal.py
+    ```
+    At this point, you should see a basic streamlit app and can begin testing any changes you wish to contribute in a PR.

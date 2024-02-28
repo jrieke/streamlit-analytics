@@ -19,7 +19,7 @@ with streamlit_analytics.track(verbose=True):
     st.time_input("time_input")
     st.file_uploader("file_uploader")
     st.color_picker("color_picker")
-    
+
     st.sidebar.checkbox("sidebar_checkbox")
     st.sidebar.button("sidebar_button")
     st.sidebar.radio("sidebar_radio", ("option 1", "option 2"))
